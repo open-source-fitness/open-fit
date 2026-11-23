@@ -2,7 +2,7 @@
 
 > Historical delivery notes for this slice. See the
 > [#125 validation record](issue-125-template-production.md) for the pre-cutover
-> composition and [historical backend notes](maintainers.md) for its setup.
+> composition and [historical backend notes](../docs/maintainers.md) for its setup.
 
 The persistence service now applies complete saved-template edits through the same
 authenticated Edge Function and invoker-rights save transaction as creation.

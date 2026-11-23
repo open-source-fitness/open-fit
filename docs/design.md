@@ -26,9 +26,9 @@
 
 OpenFit is a native mobile app for planning, logging, and tracking workouts for those who want to use their phones to do so. It aims to provide the basic functions of creating reusable workout templates, using a template for a workout and logging reps and weight, and reviewing the details of past workouts. For more information about the context of this project, see the [proposal document](../cp3/cp3-proposal).
 
-Use the [glossary](../GLOSSARY.md) for canonical domain terms. The
+Use the [glossary](../agent-docs/GLOSSARY.md) for canonical domain terms. The
 [architecture decision records](./adr/README.md) and
-[UI foundation decision summary](./ui-foundation.md) explain the frontend choices
+[UI foundation decision summary](../agent-docs/ui-foundation.md) explain the frontend choices
 recorded during #38.
 
 ## 2. Goals and non-goals
@@ -106,7 +106,7 @@ Save validates and commits the whole draft atomically. Failed saves preserve it
 for retry. Tabs preserve unfinished drafts; Back/swipe offers discard/keep editing.
 Save/Cancel applies to the entire draft. Pending saves/deletes lock conflicting
 actions and navigation. Delete requires confirmation naming the template and
-returns to the list on success. See the [confirmed #91 specification](./issue-91-template-crud.md)
+returns to the list on success. See the [confirmed #91 specification](../agent-docs/issue-91-template-crud.md)
 for target validation, lifecycle, and testing decisions.
 
 Workout history has independently collapsible exercise sections. Settings
@@ -139,7 +139,7 @@ primary muscle-group filter, defaulting to All muscles. Secondary targets never
 cause filter matches. No-match results offer Clear search and filter without
 reloading the catalog. Search/filter state survives tab changes while the route stays
 open and resets on leaving and reopening. The catalog and README credit RepDB.
-See [the agreed catalog behavior](./issue-53-exercise-catalog.md).
+See [the agreed catalog behavior](../agent-docs/issue-53-exercise-catalog.md).
 
 Tapping a catalog card opens an image-first detail screen using the selected
 record from that visit. Start/peak images are swipeable, labeled pages with
@@ -148,13 +148,13 @@ Images have independent loading/failure states. Group summaries, equipment, and
 numbered English instructions follow the images. The mounted list retains its
 scroll position and controls beneath detail without reloading the catalog.
 The selected record is released when the catalog list unmounts. A detail route
-without it offers Open catalog. See [the confirmed detail behavior](./catalog-exercise-detail.md).
+without it offers Open catalog. See [the confirmed detail behavior](../agent-docs/catalog-exercise-detail.md).
 
 Template exercises and session exercises each have their own placement identity
 and copy descriptive exercise details and sets, retaining the shared catalog
 identity. Bundled illustrations resolve from the image references in each
 snapshot. Catalog updates do not replace the saved exercise details.
-See the [catalog contract and tracking](./issue-44-exercise-catalog.md) and
+See the [catalog contract and tracking](../agent-docs/issue-44-exercise-catalog.md) and
 [identity decision](./adr/issue-44-catalog-identity-and-snapshots.md).
 
 ### Create a workout template
@@ -200,7 +200,7 @@ describes the email OTP and account session implementation.
 
 The [historical design](https://github.com/open-source-fitness/open-fit/blob/63065abb17793d2b217d3b5d3161d1ae143da0ce/docs/design.md#m1-database-scope-and-account-data-102)
 describes the Supabase Auth and application User boundary, schema, and row-level
-security. The [#125 verification record](./issue-125-template-production.md)
+security. The [#125 verification record](../agent-docs/issue-125-template-production.md)
 covers the former hosted template persistence implementation.
 
 ## 6. Technology choices and alternatives considered
@@ -213,7 +213,7 @@ trade-offs.
 
 The pinned RepDB package provides search and filter data, instructions, and
 illustrations with attribution. See the
-[offline catalog verification](./issue-138-offline-catalog.md) for bundle
+[offline catalog verification](../agent-docs/issue-138-offline-catalog.md) for bundle
 measurements and the [setup guide](./setup.md#device-review) for the native audit.
 
 ## 7. Risks and open questions

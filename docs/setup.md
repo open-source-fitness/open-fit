@@ -120,7 +120,7 @@ Record the commit(s), device and OS version, install and network conditions,
 and the result of each step. Record the packaged release size and compare it
 with a release build of pre-catalog commit `63065abb17793d2b217d3b5d3161d1ae143da0ce` using the same platform,
 build configuration, and size measurement. The
-[#138 catalog record](issue-138-offline-catalog.md#bundle-evidence) gives the
+[#138 catalog record](../agent-docs/issue-138-offline-catalog.md#bundle-evidence) gives the
 exported bundle comparison. The [#141 verification record](issue-141-local-onboarding.md)
 gives the existing automated SQLite evidence, including save failures and retries.
 
@@ -140,7 +140,7 @@ The root layout supplies the display-name store, workout service, bundled catalo
 and appearance store. The name store and workout service share a lazy SQLite
 connection. Catalog details share the open visit's selected record. Adding an
 exercise copies a snapshot into the draft. See the
-[offline catalog verification](issue-138-offline-catalog.md).
+[offline catalog verification](../agent-docs/issue-138-offline-catalog.md).
 
 ## Historical backend
 

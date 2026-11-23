@@ -1,5 +1,6 @@
 # Agent guidance
 
+- **Documentation:** Put new agent-facing documentation, including issue specs, implementation notes, and verification records, in `agent-docs/`. Only edit `docs/` when explicitly asked. Keep human-facing documentation concise and readable.
 - **Contributions:** Before changing repository files, read [CONTRIBUTING.md](CONTRIBUTING.md) and [git standards](docs/git-standards.md) for contribution scope, branch and commit conventions, review, and the definition of done.
 - **Design:** Before implementing app behavior or changing architecture or the data model, read [the design document](docs/design.md).
 - **Scope:** Before planning features or choosing milestone scope, read [the roadmap](docs/roadmap.md).
@@ -22,14 +23,14 @@
 ### Issue tracker
 
 Use GitHub Issues and the OpenFit MVP project board. Before tracker operations,
-read [issue tracker guidance](docs/agents/issue-tracker.md).
+read [issue tracker guidance](agent-docs/issue-tracker.md).
 
 ### Triage labels
 
 Before triage or readiness changes, read the
-[existing label and board mapping](docs/agents/triage-labels.md).
+[existing label and board mapping](agent-docs/triage-labels.md).
 
 ### Domain docs
 
 This is a single-context project. Before domain exploration or design, read the
-[domain documentation guidance](docs/agents/domain.md).
+[domain documentation guidance](agent-docs/domain.md).

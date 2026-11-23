@@ -32,5 +32,5 @@ Router tests exercise offline search, filtering, instructions, navigation,
 both packaged poses, and saved template detail. No supported physical device
 was connected, so native decoding and installed-app behavior in airplane mode
 remain unverified in this record. Follow the current
-[native offline audit](setup.md#device-review) to verify the catalog from a fresh
+[native offline audit](../docs/setup.md#device-review) to verify the catalog from a fresh
 installation and exercise the SQLite template flow in airplane mode.

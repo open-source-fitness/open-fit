@@ -2,7 +2,7 @@
 
 > Historical delivery notes for this slice. See the
 > [#125 validation record](issue-125-template-production.md) for the pre-cutover
-> composition and [historical backend notes](maintainers.md) for its setup.
+> composition and [historical backend notes](../docs/maintainers.md) for its setup.
 
 The persistence service now creates complete templates through the authenticated
 `workout-templates` Edge Function and an invoker-rights database transaction. The

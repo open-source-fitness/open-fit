@@ -2,7 +2,7 @@
 
 > Historical delivery notes for this slice. See the
 > [#125 validation record](issue-125-template-production.md) for the pre-cutover
-> composition and [historical backend notes](maintainers.md) for its setup.
+> composition and [historical backend notes](../docs/maintainers.md) for its setup.
 
 The injected `createSupabaseWorkoutService(getClient)` reads through the
 `workout-templates` Edge Function using the shared runtime's current client.
