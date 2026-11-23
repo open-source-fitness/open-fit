@@ -14,6 +14,6 @@ integrations. The existing backend record retains its original number.
 
 - [Issue 44: Separate exercise placements from catalog identity and preserve saved details](./issue-44-catalog-identity-and-snapshots.md)
 
-The [UI foundation decision summary](../ui-foundation.md) records the remaining
+The [UI foundation decision summary](../../agent-docs/ui-foundation.md) records the remaining
 agreed scope and presentation choices. [Design section 6](../design.md#6-technology-choices-and-alternatives-considered)
 documents the provider and authentication choices for the Supabase implementation.

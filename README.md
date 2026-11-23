@@ -44,9 +44,9 @@ The design document for this project is found [here](./docs/design.md). It outli
 
 This is the starting point for understanding this project. 
 
-Use the [glossary](./GLOSSARY.md) for shared product terminology. The
+Use the [glossary](./agent-docs/GLOSSARY.md) for shared product terminology. The
 [architecture decision records](./docs/adr/README.md) explain the main frontend
-boundaries, and the [UI foundation decisions](./docs/ui-foundation.md) capture the
+boundaries, and the [UI foundation decisions](./agent-docs/ui-foundation.md) capture the
 agreed scope and presentation choices for #38.
 
 ## Roadmap

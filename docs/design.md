@@ -25,9 +25,9 @@
 
 OpenFit is a native mobile app for planning, logging, and tracking workouts for those who want to use their phones to do so. It aims to provide the basic functions of creating reusable workout templates, using a template for a workout and logging reps and weight, and reviewing the details of past workouts. For more information about the context of this project, see the [proposal document](../cp3/cp3-proposal).
 
-Use the [glossary](../GLOSSARY.md) for canonical domain terms. The
+Use the [glossary](../agent-docs/GLOSSARY.md) for canonical domain terms. The
 [architecture decision records](./adr/README.md) and
-[UI foundation decision summary](./ui-foundation.md) explain the frontend choices
+[UI foundation decision summary](../agent-docs/ui-foundation.md) explain the frontend choices
 recorded during #38.
 
 ## 2. Goals and non-goals

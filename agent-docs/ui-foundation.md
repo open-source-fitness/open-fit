@@ -7,7 +7,7 @@ followed implementation; it does not expand the feature scope.
 
 ## Shared language
 
-[GLOSSARY.md](../GLOSSARY.md) defines the product vocabulary. Use **workout
+[GLOSSARY.md](./GLOSSARY.md) defines the product vocabulary. Use **workout
 template** for a reusable description, **workout session** for one occurrence, and
 **workout history** for saved past sessions. “Plan,” “workout,” and “log” may appear
 as informal UI wording; they do not introduce additional domain concepts.
@@ -25,7 +25,7 @@ of eight repetitions and a recorded result of six without changing its target.
 
 | Area | Agreed behavior |
 | --- | --- |
-| Architecture | Views render ViewModel state; ViewModels consume injected asynchronous services. Sample data follows the same boundary intended for real data. See [ADR 0002](./adr/0002-use-mvvm-with-injected-services.md). |
+| Architecture | Views render ViewModel state; ViewModels consume injected asynchronous services. Sample data follows the same boundary intended for real data. See [ADR 0002](../docs/adr/0002-use-mvvm-with-injected-services.md). |
 | Stub depth | Clickable sample lists and read-only details make navigation reviewable. Authentication forms, template editing, and workout logging belong to later feature tasks. |
 | Navigation | Three bottom tabs: Templates, Workouts, and Account. Templates opens first. Account access does not gate this preview. |
 | Templates | A sample template opens a detail screen showing its exercises and target sets. |
@@ -37,7 +37,7 @@ of eight repetitions and a recorded result of six without changing its target.
 | Units | Sample weights use pounds (`lb`). Unit conversion and a units preference are deferred. |
 | Palette | Both themes use `#2C3639`, `#3F4E4F`, `#A27B5C`, and `#DCD7C9`, with supporting neutral colors for readability. |
 | Data states | The frontend represents loading, error/retry, empty lists, and missing detail records. |
-| History integrity | Session values remain independent of later template edits. See [ADR 0003](./adr/0003-preserve-independent-session-history.md). |
+| History integrity | Session values remain independent of later template edits. See [ADR 0003](../docs/adr/0003-preserve-independent-session-history.md). |
 | Device review | A physical iPhone running Expo Go is the first review target; Android remains supported. |
 | SDK | SDK 58 matches the Expo Go version reported on the review device. This superseded the initial SDK 54 selection; the current version is recorded in `package.json`. |
 
@@ -81,19 +81,19 @@ from the default branch while that dependency remains unresolved.
 
 ## Account-access integration (#42)
 
-[ADR 0004](./adr/0004-email-otp-account-access.md) supersedes the original
+[ADR 0004](../docs/adr/0004-email-otp-account-access.md) supersedes the original
 unauthenticated sample preview and sign-in placeholder. Signed-out users now see
 email-code access, while appearance Settings remains available. Verified accounts
 without an account name supply one before entering Templates. Account shows the
 name, email, and Settings and supports name editing. Training data remains sample
 data until its persistence tasks land. #43 adds stored authentication
 restoration, device-local sign-out, and account-state cleanup; see the
-[session lifecycle](design.md#authentication-session-lifecycle-43).
+[session lifecycle](../docs/design.md#authentication-session-lifecycle-43).
 
 ## Scope and remaining questions
 
 The sample-data preview does not remove authentication or training-data
-persistence requirements from the [roadmap](./roadmap.md). Likewise, the domain
+persistence requirements from the [roadmap](../docs/roadmap.md). Likewise, the domain
 glossary describes product concepts; it does not finalize a database schema or
 require each concept to have a separate frontend type.
 
@@ -106,6 +106,6 @@ tasks:
 - Long-term weight-unit preferences and conversion behavior.
 - Session recovery and synchronization after a save failure.
 
-See [setup](./setup.md) for launch, validation, and physical-device review steps.
+See [setup](../docs/setup.md) for launch, validation, and physical-device review steps.
 Palette values, dependency versions, and navigation labels are kept here and in
 their existing configuration rather than being promoted to architectural rules.
