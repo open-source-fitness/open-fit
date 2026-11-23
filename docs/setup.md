@@ -88,7 +88,7 @@ so delayed saves cannot restore the template.
 
 Unsaved drafts remain temporary. Local training data is tied to the installation.
 Backup and recovery are planned after the MVP. Persistent workout logging is
-future work. See the [#141 verification record](issue-141-local-onboarding.md).
+future work.
 
 ## Frontend structure
 
