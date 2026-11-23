@@ -1,5 +1,9 @@
 # Database migrations
 
+> These migrations describe the former Supabase backend. See the
+> [historical backend notes](../../docs/maintainers.md) for the pre-cutover
+> checkout and [setup](../../docs/setup.md) for the SQLite workflow.
+
 A migration is a SQL file describing a database structure change, such as adding
 a table. Contributors can create and test migrations locally; only maintainers
 apply them to the shared hosted project. Committed migrations define the schema.
@@ -50,7 +54,10 @@ integration; this schema does not implement an API or change the current UI.
 
 ## Database tests
 
-For the complete isolated migration and behavior check, run:
+Run these historical Supabase checks from the repository root at pre-cutover
+commit `63065abb17793d2b217d3b5d3161d1ae143da0ce`. Follow the
+[pinned setup guide](https://github.com/open-source-fitness/open-fit/blob/63065abb17793d2b217d3b5d3161d1ae143da0ce/docs/setup.md#verify-the-database-in-isolation)
+for prerequisites. For the complete isolated migration and behavior check, run:
 
 ```sh
 npm run test:db
@@ -67,7 +74,8 @@ only in that temporary database, never as automatic seed data. Future migrations
 are applied in order; once real migrations extending template storage exist, add
 appropriate pre-migration template sentinels rather than artificial migrations.
 
-For a faster behavior-only check after applying migrations to your own local backend, run:
+In the same checkout, for a faster behavior-only check after applying migrations
+to your own local backend, run:
 
 ```sh
 npx --yes supabase@3.1.0 test db
@@ -81,7 +89,7 @@ test-file path; do not reset or redirect tests to a shared/hosted database.
 
 ## Create and test locally
 
-Start the local backend using [setup](../../docs/setup.md), then run from the
+At the pre-cutover checkout, start the local backend using its setup guide, then run from the
 repository root:
 
 ```sh
@@ -116,5 +124,5 @@ shared, add a new migration to correct it instead of changing its history.
 After pulling other contributors' migrations, run local `db push --include-all` to apply them,
 or `db reset` if you want to discard local data and rebuild.
 
-See the [maintainer guide](../../docs/maintainers.md) for hosted target checks,
+See the historical maintainer guide linked above for hosted target checks,
 deployments, and capturing edits made in the hosted dashboard.
