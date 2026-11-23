@@ -146,6 +146,5 @@ exercise copies a snapshot into the draft. See the
 
 ## Historical backend
 
-The previous Supabase workflow is archived. See the
-[historical backend notes](maintainers.md) for the pre-cutover snapshot and
-retained artifacts.
+See the [historical backend notes](maintainers.md) for links to the former
+Supabase workflow and its verification records in Git history.

@@ -155,7 +155,4 @@ vite.config.ts.timestamp-*
 android/
 ios/
 
-# Supabase local credentials
-supabase/signing_keys.json
-
 secrets.json

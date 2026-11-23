@@ -1,5 +1,8 @@
 # MVP Plan: Milestone 1 (Runnable Demo), Nov 18
 
+This plan records the original Supabase-based demo. See the
+[setup guide](setup.md) for the current SQLite workflow.
+
 ## 1. What's included
 
 The slice is encapsulated in the following flow: a user logs in using an email and an OTP. They see no seeded data, but are able to create, update, and delete exercise templates using a catalog of exercises. These template changes persist across app sessions. The app client runs in Expo Go from the development server. The database, authentication, and backend runs on Supabase.

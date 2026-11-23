@@ -200,7 +200,7 @@ describes the email OTP and account session implementation.
 
 The [historical design](https://github.com/open-source-fitness/open-fit/blob/63065abb17793d2b217d3b5d3161d1ae143da0ce/docs/design.md#m1-database-scope-and-account-data-102)
 describes the Supabase Auth and application User boundary, schema, and row-level
-security. The [#125 verification record](../agent-docs/issue-125-template-production.md)
+security. The [#125 verification record](https://github.com/open-source-fitness/open-fit/blob/63065abb17793d2b217d3b5d3161d1ae143da0ce/docs/issue-125-template-production.md)
 covers the former hosted template persistence implementation.
 
 ## 6. Technology choices and alternatives considered
