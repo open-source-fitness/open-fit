@@ -13,7 +13,7 @@ Design decisions agreed during the issue #44 interview and confirmed by the main
 ## Agreed behavior
 
 - Deliver exercise types, RepDB validation and mapping, and minimal adaptation of existing template/session consumers. Live fetching, caching, and catalog UI belong to a separate issue.
-- Separate placement identity from namespaced catalog identity and retain saved exercise details; see [the identity ADR](./adr/issue-44-catalog-identity-and-snapshots.md).
+- Separate placement identity from namespaced catalog identity and retain saved exercise details; see [the identity ADR](../docs/adr/issue-44-catalog-identity-and-snapshots.md).
 - Preserve primary and secondary muscles separately. Omitted lists become empty arrays; malformed lists or entries reject the record. Never infer muscle targets.
 - Map absent equipment to an explicit no-equipment value only when `is_bodyweight` is true. Reject absent equipment without that confirmation.
 - Return valid exercises together with structured diagnostics about rejected records rather than failing the whole catalog for one invalid record.

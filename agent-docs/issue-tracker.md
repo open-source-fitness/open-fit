@@ -3,7 +3,7 @@
 Issues and specs live in [open-source-fitness/open-fit](https://github.com/open-source-fitness/open-fit/issues).
 Use the `gh` CLI with `--repo open-source-fitness/open-fit` for issue operations.
 
-Read [project management](../project-mgmt.md) before tracker changes. Use its
+Read [project management](../docs/project-mgmt.md) before tracker changes. Use its
 issue templates, milestone rules, assignment process, and definition of done.
 
 ## Issue operations

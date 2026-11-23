@@ -111,13 +111,13 @@ The root layout injects workout, auth, catalog, and preference dependencies.
 Its lazy Supabase runtime exposes the same client to authentication and feature
 services, so later requests use the current authenticated session after refresh.
 The injected persistence service's whole-template update and retry contract is
-documented in [template updates](issue-123-template-updates.md), including its
+documented in [template updates](../agent-docs/issue-123-template-updates.md), including its
 disposable local service/HTTP/database check.
 Production template operations use the authenticated persistence service, and
 template mutations refresh reads. Controlled service factories remain available
 for tests. The catalog service reads packaged RepDB data, and detail shares the
 open visit's selected record. Adding an exercise copies a snapshot into the
-draft. See [offline catalog verification](issue-138-offline-catalog.md).
+draft. See [offline catalog verification](../agent-docs/issue-138-offline-catalog.md).
 
 ## Backend setup
 
@@ -210,12 +210,12 @@ expiry, set only that disposable stack's OTP expiry to two seconds, restart it,
 and add `AUTH_TEST_EXPIRY_SECONDS=2` to the command. Keep committed expiry at 600.
 Device review and hosted delivery verification remain separate from these checks.
 
-The optional [persisted template read check](./issue-121-template-reads.md) exercises
+The optional [persisted template read check](../agent-docs/issue-121-template-reads.md) exercises
 the production service through a disposable local Edge Function and database.
 Production template composition uses that service by default.
-The same check now covers [atomic creation and retry safety](./issue-122-template-creation.md),
+The same check now covers [atomic creation and retry safety](../agent-docs/issue-122-template-creation.md),
 including an injected late-write failure in the disposable database.
-It also verifies [retry-safe deletion](./issue-124-template-deletion.md), including
+It also verifies [retry-safe deletion](../agent-docs/issue-124-template-deletion.md), including
 lost responses, owner isolation, cascade failure recovery, and creation replay.
 
 ## Verify template persistence in isolation
@@ -238,5 +238,5 @@ Do not redirect checks to a shared project or add a remote target.
 
 Native device review remains separate: verify restart/update/reinstall + OTP on
 the same backend/account, drag ordering, keyboard, large text, and both themes.
-The [#125 validation record](issue-125-template-production.md) distinguishes checks
+The [#125 validation record](../agent-docs/issue-125-template-production.md) distinguishes checks
 completed here from device and hosted audit work still requiring review.

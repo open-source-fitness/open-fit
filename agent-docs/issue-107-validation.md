@@ -31,7 +31,7 @@ It does not complete the human-led hosted/device audit in #110 or close #42.
   and the subsequent audit passed all 20 Doctor checks.
 
 Use the TypeScript/Jest commands and the opt-in disposable Supabase service check
-documented in [setup](setup.md#email-otp-configuration-and-verification) to reproduce
+documented in [setup](../docs/setup.md#email-otp-configuration-and-verification) to reproduce
 the checks. The approved UI seam injects the auth service and clock; the real
 Supabase check independently establishes correct backend storage.
 

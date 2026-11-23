@@ -107,7 +107,7 @@ Save validates and commits the whole draft atomically. Failed saves preserve it
 for retry. Tabs preserve unfinished drafts; Back/swipe offers discard/keep editing.
 Save/Cancel applies to the entire draft. Pending saves/deletes lock conflicting
 actions and navigation. Delete requires confirmation naming the template and
-returns to the list on success. See the [confirmed #91 specification](./issue-91-template-crud.md)
+returns to the list on success. See the [confirmed #91 specification](../agent-docs/issue-91-template-crud.md)
 for target validation, lifecycle, and testing decisions.
 
 Workout history has independently collapsible exercise sections. Account displays
@@ -144,7 +144,7 @@ An account-generation boundary resets account-specific services, providers,
 drafts, cached reads, edits, and navigation, while late results cannot restore
 old state. Appearance preferences and saved backend records remain. Future
 maximums state must share this lifecycle; its concrete verification remains #49.
-See [the confirmed #43 specification](issue-43-auth-sessions.md).
+See [the confirmed #43 specification](../agent-docs/issue-43-auth-sessions.md).
 
 ### Exercise catalog boundary (#44)
 
@@ -168,7 +168,7 @@ primary muscle-group filter, defaulting to All muscles. Secondary targets never
 cause filter matches. No-match results offer Clear search and filter without
 reloading the catalog. Search/filter state survives tab changes while the route stays
 open and resets on leaving and reopening. The catalog and README credit RepDB.
-See [the agreed catalog behavior](./issue-53-exercise-catalog.md).
+See [the agreed catalog behavior](../agent-docs/issue-53-exercise-catalog.md).
 
 Tapping a catalog card opens an image-first detail screen using the selected
 record from that visit. Start/peak images are swipeable, labeled pages with
@@ -177,13 +177,13 @@ Images have independent loading/failure states. Group summaries, equipment, and
 numbered English instructions follow the images. The mounted list retains its
 scroll position and controls beneath detail without reloading the catalog.
 The selected record is released when the catalog list unmounts. A detail route
-without it offers Open catalog. See [the confirmed detail behavior](./catalog-exercise-detail.md).
+without it offers Open catalog. See [the confirmed detail behavior](../agent-docs/catalog-exercise-detail.md).
 
 Template exercises and session exercises each have their own placement identity
 and copy descriptive exercise details and sets, retaining the shared catalog
 identity. Bundled illustrations resolve from the image references in each
 snapshot. Catalog updates do not replace the saved exercise details.
-See the [catalog contract and tracking](./issue-44-exercise-catalog.md) and
+See the [catalog contract and tracking](../agent-docs/issue-44-exercise-catalog.md) and
 [identity decision](./adr/issue-44-catalog-identity-and-snapshots.md).
 
 ### Core flow - Making a workout template
@@ -256,7 +256,7 @@ See the [catalog contract and tracking](./issue-44-exercise-catalog.md) and
 
 ### M1 database scope and account data (#102)
 
-See the [confirmed #102 specification](./issue-102-database.md) for acceptance
+See the [confirmed #102 specification](../agent-docs/issue-102-database.md) for acceptance
 criteria, implementation boundaries, and the approved database testing seam.
 
 The M1 database includes an application-owned User table, workout templates,
@@ -336,7 +336,7 @@ using the same backend. Unsaved template drafts remain temporary.
 
 ### Template persistence (#45)
 
-The [confirmed #45 specification](./issue-45-template-persistence.md) governs the
+The [confirmed #45 specification](../agent-docs/issue-45-template-persistence.md) governs the
 implemented production template service; hosted deployment and device audit remain
 separate review activities. Whole-template
 saves use an authenticated Edge Function/data-access boundary and an invoker-rights
@@ -354,7 +354,7 @@ a switched account cannot reuse an older service. A guarded refresh retries a
 rejected current token once. Definitive loss enters existing account recovery,
 scoped by account identity and generation so late failures cannot clear a new
 account. Ordinary permission/transport errors preserve the draft. See the
-[validation record](./issue-125-template-production.md) and setup commands.
+[validation record](../agent-docs/issue-125-template-production.md) and setup commands.
 
 **ERD:**
 ![Entity-Relationship Diagram](./design-images/openfit-erd.jpg)

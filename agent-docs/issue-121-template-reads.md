@@ -1,7 +1,7 @@
 # Persisted template reads (#121)
 
 > Historical delivery notes for this slice. The final production composition and
-> current verification commands are documented in [setup](setup.md) and the
+> current verification commands are documented in [setup](../docs/setup.md) and the
 > [#125 validation record](issue-125-template-production.md).
 
 The injected `createSupabaseWorkoutService(getClient)` reads through the
