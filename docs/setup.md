@@ -69,8 +69,9 @@ template CRUD, reorder, Cancel, reopen, rollback, and retry after a commit.
 The display name and workout templates share one versioned database. Each
 template is stored as one row with its exercise snapshots and ordered sets.
 Save receipts commit with the template so a retry from the same open draft can
-recover its result without reversing a newer edit. Deletion keeps those receipts
-so delayed saves cannot restore the template.
+recover its result without reversing a newer edit. Deletion removes the template
+and its receipts in one transaction. It retains the template ID so delayed saves
+cannot restore it.
 
 ## Device review
 

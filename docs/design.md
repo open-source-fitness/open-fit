@@ -180,7 +180,7 @@ edited or deleted. See [ADR 0003](./adr/0003-preserve-independent-session-histor
 | --- | --- |
 | Display name | `local_profile` stores a single display name for the installation. |
 | Workout templates | `workout_templates` stores the template ID, creation time, list sequence, and JSON content. The content includes ordered exercise placements and sets, including catalog identity and descriptive snapshots. |
-| Save receipts | `template_save_receipts` associates a save operation with its template and committed response. Receipts survive template deletion to guard against delayed save requests. |
+| Save receipts | `template_save_receipts` associates a save operation with its template and committed response. Deletion removes the receipts and keeps only the template ID in `deleted_workout_templates` to reject delayed saves. |
 | Exercise catalog | The pinned RepDB package supplies exercise records and illustrations. |
 | Appearance | The device preference store persists the user's selection. |
 
