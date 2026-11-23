@@ -1,5 +1,7 @@
 # Share hosted development while keeping schema changes reproducible
 
+Superseded by [ADR 0006](0006-store-training-data-on-device.md).
+
 Contributors normally run the app against the existing OpenFit hosted development
 project, with an optional local Docker backend for isolated backend work. App access
 uses a public key and feature-defined data permissions; hosted administration and

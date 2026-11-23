@@ -1,5 +1,7 @@
 # Use email OTP for account access
 
+Superseded by [ADR 0006](0006-store-training-data-on-device.md).
+
 During the [#42](https://github.com/open-source-fitness/open-fit/issues/42) design discussion
 on November 13, 2026, the maintainer selected email OTP as the sole account-access
 method, replacing the earlier email/password plus email OTP decision from #41.
