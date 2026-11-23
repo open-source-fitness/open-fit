@@ -27,6 +27,10 @@ history still shows labeled samples.
   19,804,900 bytes before application packaging. The Hermes bundles measure
   5,327,488 bytes for iOS and 5,317,600 for Android. Source maps contain no
   Supabase runtime or legacy account routes.
+- Android release assembly passed from a clean copy of cutover revision
+  `644b22d` using Expo prebuild and Gradle. The resulting universal APK was
+  127,559,668 bytes. All 1,231 packaged RepDB illustrations matched their source
+  WebP files by SHA-256. The APK was inspected locally without installing it.
 
 At the time of this verification, the retired account implementation was
 still present in the worktree.
@@ -34,12 +38,22 @@ still present in the worktree.
 `production-template-access.test.tsx` exercise the retired router and are
 excluded from the active Jest and TypeScript checks for this run.
 
-## Physical-device evidence pending
+## iOS Expo Go smoke test
 
-No iOS or Android device was available. Neither platform ran an installed build
-during this verification. The native Expo SQLite bridge, first launch and
-catalog rendering in airplane mode, force-close recovery, in-place app update,
-and installed package size remain unverified. The database migration and
-restart checks above ran through Jest. Follow the
-[device-review steps](setup.md#device-review) to complete the offline
-template-parity gate.
+On November 22, 2026, a project maintainer reported that the app appeared to
+work correctly on iOS in Expo Go. No device model, OS version, or individual
+scenario results were reported.
+
+## Android standalone device audit
+
+The maintainer confirmed that both Android audit APKs installed in airplane mode,
+including the in-place update from version code 1 to version code 2. App data
+survived closing and reopening the app and installing the update. The maintainer
+reported a delay of approximately two to five seconds when opening the exercise
+catalog. The phone model and Android version were not reported.
+
+On an Android Hermes release build in airplane mode, the original English sort
+took 2.03–4.76 seconds over four catalog visits. Reusing one English collator
+took 2.71–4.29 milliseconds for the same 708 exercises and produced identical
+ordering in each visit. This measures sorting on an emulator. The updated
+timing has not been measured on the maintainer’s phone.

@@ -26,6 +26,12 @@ const migrations = [
     id INTEGER PRIMARY KEY CHECK (id = 1),
     display_name TEXT NOT NULL CHECK (length(trim(display_name)) > 0)
   );`,
+  `CREATE TABLE deleted_workout_templates (id TEXT PRIMARY KEY NOT NULL);
+  INSERT INTO deleted_workout_templates (id)
+  SELECT DISTINCT receipt.template_id FROM template_save_receipts AS receipt
+  WHERE NOT EXISTS (SELECT 1 FROM workout_templates WHERE id = receipt.template_id);
+  DELETE FROM template_save_receipts
+  WHERE template_id IN (SELECT id FROM deleted_workout_templates);`,
 ];
 
 export function createLocalDatabase(openConnection: () => Promise<LocalSqliteConnection>) {

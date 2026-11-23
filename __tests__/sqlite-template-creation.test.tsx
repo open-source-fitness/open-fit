@@ -71,9 +71,10 @@ function service(loseSaveResponse?: () => boolean, beforeRead?: (sql: string) =>
 test('requires a local name, then saves and reopens a template with the bundled catalog and no fetch', async () => {
   const fetch = jest.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Offline'));
   await renderRouter('./app', { initialUrl: '/workouts' });
-  expect(await screen.findByText('Training data is stored on this device. Backup is unavailable.')).toBeVisible();
+  const notice = 'Training data is stored on this device. OpenFit doesn’t offer backup or recovery yet.';
+  expect(await screen.findByText(notice)).toBeVisible();
   await fireEvent.press(screen.getByRole('button', { name: 'Got it' }));
-  expect(screen.queryByText('Training data is stored on this device. Backup is unavailable.')).toBeNull();
+  expect(screen.queryByText(notice)).toBeNull();
   const name = await screen.findByLabelText('Display name');
   expect(screen.queryByRole('button', { name: /^Workouts, tab/ })).toBeNull();
   await fireEvent.changeText(name, '   ');
@@ -173,6 +174,12 @@ test('an earlier SQLite database keeps its template through onboarding, a rename
         }],
       }),
     );
+    previous.exec(`
+      INSERT INTO template_save_receipts (operation_id, template_id, content)
+      SELECT 'saved-operation', id, content FROM workout_templates;
+      INSERT INTO template_save_receipts (operation_id, template_id, content)
+      VALUES ('deleted-operation', 'deleted-template', '{"title":"Deleted plan"}');
+    `);
   } finally {
     previous.close();
   }
@@ -183,6 +190,15 @@ test('an earlier SQLite database keeps its template through onboarding, a rename
   await fireEvent.changeText(name, 'Alex');
   await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
   expect(await screen.findByRole('button', { name: /^Earlier plan/ })).toBeVisible();
+  const migrated = new DatabaseSync(join(directory, 'open-fit.db'));
+  try {
+    expect(migrated.prepare('SELECT operation_id FROM template_save_receipts').all())
+      .toEqual([{ operation_id: 'saved-operation' }]);
+    expect(migrated.prepare('SELECT id FROM deleted_workout_templates').all())
+      .toEqual([{ id: 'deleted-template' }]);
+  } finally {
+    migrated.close();
+  }
 
   await fireEvent.press(screen.getByRole('button', { name: /^Settings, tab/ }));
   await fireEvent.press(screen.getByRole('button', { name: 'Edit name' }));
@@ -424,6 +440,25 @@ test('cancels a draft and durably saves reordered and replaced exercises in the 
   expect(await screen.findByLabelText('Set 1: 12 reps × 0 lb')).toBeVisible();
 });
 
+test.each(['foreign', 'invented'])('rejects a saved placement with a %s UUID without changing the target template', async (identity) => {
+  const storage = service();
+  const content: TemplateContent = {
+    title: 'Saved plan', description: '',
+    exercises: [{
+      id: 'draft-press', catalogId: 'repdb:press', name: 'Saved press', primaryMuscles: [], secondaryMuscles: [],
+      equipment: { kind: 'none' }, sets: [{ setNumber: 1, targetWeight: 12.5, targetReps: 8 }],
+    }],
+  };
+  const saved = await storage.createTemplate(content);
+  const other = await storage.createTemplate({ ...content, title: 'Other plan' });
+  const id = identity === 'foreign' ? other.exercises[0].id : '10000000-0000-4000-8000-000000000001';
+
+  await expect(storage.updateTemplate(saved.id, {
+    ...content, title: 'Changed plan', exercises: [{ ...content.exercises[0], id }],
+  })).rejects.toThrow('This exercise placement does not belong to this template.');
+  expect(await storage.listTemplates()).toEqual([saved, other]);
+});
+
 test('replays a metadata save after a lost response without reverting a newer whole-template edit', async () => {
   let loseResponse = false;
   const storage = service(() => {
@@ -496,6 +531,13 @@ test('retains details after a lost delete response and retries without restoring
     await screen.findByRole('button', { name: 'Retry delete' });
     expect(screen.getByText('Edited plan')).toBeVisible();
     expect(await service().getTemplate(saved.id)).toBeNull();
+    const persisted = new DatabaseSync(join(directory, 'training.db'));
+    try {
+      expect(persisted.prepare('SELECT content FROM template_save_receipts WHERE template_id = ?').all(saved.id))
+        .toEqual([]);
+    } finally {
+      persisted.close();
+    }
     await expect(storage.updateTemplate(saved.id, changes, edit)).rejects.toThrow('couldn’t be found');
     await expect(storage.updateTemplate(saved.id, { ...changes, title: 'Stale draft' })).rejects.toThrow('couldn’t be found');
     await expect(storage.updateTemplateDetails(saved.id, changes)).rejects.toThrow('couldn’t be found');
@@ -561,7 +603,7 @@ test('retries a rolled-back edit and separately recovers a failed reload after t
   expect(await screen.findByLabelText('Set 1: 6 reps × 25 lb')).toBeVisible();
 });
 
-test('recovers a lost whole-template save in the editor without overwriting a newer save', async () => {
+test('recovers a lost whole-template save after a newer save removes a saved placement', async () => {
   let loseResponse = false;
   const storage = service(() => {
     const lose = loseResponse;
@@ -587,9 +629,11 @@ test('recovers a lost whole-template save in the editor without overwriting a ne
     exercises: [original.exercises[0], { name: 'Catalog row' }],
   });
   const other = service();
-  const newer = await other.updateTemplate(original.id, { ...original, title: 'Newer edit' });
+  const newer = await other.updateTemplate(original.id, {
+    ...committed, title: 'Newer edit', exercises: committed.exercises.slice(1),
+  });
   await fireEvent.press(screen.getByRole('button', { name: 'Retry save' }));
   expect(await screen.findByText('Newer edit')).toBeVisible();
-  expect(screen.queryByText('Catalog row')).toBeNull();
+  expect(screen.queryByText('Catalog press')).toBeNull();
   expect(await service().getTemplate(original.id)).toEqual(newer);
 });

@@ -69,8 +69,9 @@ template CRUD, reorder, Cancel, reopen, rollback, and retry after a commit.
 The display name and workout templates share one versioned database. Each
 template is stored as one row with its exercise snapshots and ordered sets.
 Save receipts commit with the template so a retry from the same open draft can
-recover its result without reversing a newer edit. Deletion keeps those receipts
-so delayed saves cannot restore the template.
+recover its result without reversing a newer edit. Deletion removes the template
+and its receipts in one transaction. It retains the template ID so delayed saves
+cannot restore it.
 
 ## Device review
 
@@ -121,8 +122,9 @@ and the result of each step. Record the packaged release size and compare it
 with a release build of pre-catalog commit `63065abb17793d2b217d3b5d3161d1ae143da0ce` using the same platform,
 build configuration, and size measurement. The
 [#138 catalog record](../agent-docs/issue-138-offline-catalog.md#bundle-evidence) gives the
-exported bundle comparison. The [#141 verification record](issue-141-local-onboarding.md)
-gives the existing automated SQLite evidence, including save failures and retries.
+exported bundle comparison. The
+[#141 verification record](../agent-docs/issue-141-local-onboarding.md) gives
+the existing automated SQLite evidence, including save failures and retries.
 
 Unsaved drafts are temporary. Backup and recovery are planned after the MVP.
 

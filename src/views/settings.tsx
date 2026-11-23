@@ -33,6 +33,16 @@ const options: readonly { value: ThemePreference; label: string }[] = [
 
 function AppearanceSettings() {
   const model = useTheme();
+  const disabled = !model.ready || model.saving;
+  let preferenceStatus = 'Your preference is saved on this device.';
+  if (model.error) {
+    preferenceStatus = 'Choose an appearance to try again.';
+  } else if (!model.ready) {
+    preferenceStatus = 'Loading preference…';
+  } else if (model.saving) {
+    preferenceStatus = 'Saving preference…';
+  }
+
   return (
     <Card>
       <Copy kind="heading">Appearance</Copy>
@@ -40,7 +50,6 @@ function AppearanceSettings() {
       <View accessibilityRole="radiogroup" style={{ gap: 8 }}>
         {options.map(({ value, label }) => {
           const selected = model.preference === value;
-          const disabled = !model.ready || model.saving;
           return (
             <Pressable
               key={value}
@@ -65,15 +74,7 @@ function AppearanceSettings() {
         })}
       </View>
       <FormError message={model.error ?? ''} />
-      <Copy kind="muted">
-        {model.error
-          ? 'Choose an appearance to try again.'
-          : !model.ready
-          ? 'Loading preference…'
-          : model.saving
-            ? 'Saving preference…'
-            : 'Your preference is saved on this device.'}
-      </Copy>
+      <Copy kind="muted">{preferenceStatus}</Copy>
     </Card>
   );
 }

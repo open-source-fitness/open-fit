@@ -57,8 +57,10 @@ export function useExerciseCatalogViewModel() {
         setState({ status: 'failure', error: result.error });
         return;
       }
+      // Reuse the collator across comparisons to avoid constructing one for every pair on Android.
+      const { compare } = new Intl.Collator('en');
       const exercises = [...result.exercises]
-        .sort((a, b) => a.name.localeCompare(b.name, 'en'))
+        .sort((a, b) => compare(a.name, b.name))
         .map((exercise) => ({
           exercise,
           primaryGroups: groupMuscles(exercise.primaryMuscles, 'primary'),

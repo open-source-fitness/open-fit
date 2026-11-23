@@ -22,7 +22,7 @@ type TemplateSave =
   | { mode: 'update'; id: string; content: TemplateContent }
   | { mode: 'update'; id: string; details: TemplateDetails };
 
-const savedIdentity = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const savedPlacementId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function readTemplate(row: TemplateRow): WorkoutTemplate {
   const content: TemplateContent = JSON.parse(row.content);
@@ -54,27 +54,26 @@ export function createSqliteWorkoutService(
       }
       const { id, placements } = draft;
       const existing = await findTemplate(db, id);
-      if (!existing && (mode === 'update' || await db.getFirstAsync(
-        'SELECT 1 FROM template_save_receipts WHERE template_id = ? LIMIT 1', id))) {
-        // A committed draft can never restore a template after deletion.
-        throw new Error('This template couldn’t be found.');
+      if (!existing) {
+        const mustExist = mode === 'update' || await db.getFirstAsync(
+          'SELECT 1 FROM deleted_workout_templates WHERE id = ?', id);
+        if (mustExist) throw new Error('This template couldn’t be found.');
       }
 
       let content: TemplateContent;
-      if ('details' in change && existing) {
+      if ('content' in change) {
+        content = change.content;
+      } else {
+        if (!existing) throw new Error('This template couldn’t be found.');
         // Reuse the original exercises on retry so an intervening edit cannot change the receipt lookup.
         draft.metadataExercises ??= readTemplate(existing).exercises;
         const { title, description } = change.details;
         content = { title, description, exercises: draft.metadataExercises };
-      } else if ('content' in change) {
-        content = change.content;
-      } else {
-        throw new Error('This template couldn’t be found.');
       }
       const validated = validateTemplate(content);
       const exercises = validated.exercises.map(exercise => {
-        const savedId = placements.get(exercise.id)
-          ?? (mode === 'update' && savedIdentity.test(exercise.id) ? exercise.id : newId());
+        const usesSavedId = mode === 'update' && savedPlacementId.test(exercise.id);
+        const savedId = placements.get(exercise.id) ?? (usesSavedId ? exercise.id : newId());
         placements.set(exercise.id, savedId);
         return { ...exercise, id: savedId };
       });
@@ -86,6 +85,13 @@ export function createSqliteWorkoutService(
         const receipt = await db.getFirstAsync<{ content: string }>(
           'SELECT content FROM template_save_receipts WHERE template_id = ? AND operation_id = ?', id, operationId);
         if (receipt) return readTemplate({ ...existing, content: receipt.content });
+
+        if (mode === 'update') {
+          const savedPlacements = new Set(readTemplate(existing).exercises.map(exercise => exercise.id));
+          if (validated.exercises.some(({ id }) => savedPlacementId.test(id) && !savedPlacements.has(id))) {
+            throw new Error('This exercise placement does not belong to this template.');
+          }
+        }
       }
 
       const createdAt = existing?.created_at ?? new Date().toISOString();
@@ -126,8 +132,11 @@ export function createSqliteWorkoutService(
     },
     deleteTemplate(id) {
       return database.write(async db => {
-        // Preserve successful-save receipts so a delayed creation retry cannot resurrect this template.
+        // A delayed creation retry needs only the deleted template's ID.
+        await db.runAsync(`INSERT OR IGNORE INTO deleted_workout_templates (id)
+          SELECT id FROM workout_templates WHERE id = ?`, id);
         await db.runAsync('DELETE FROM workout_templates WHERE id = ?', id);
+        await db.runAsync('DELETE FROM template_save_receipts WHERE template_id = ?', id);
       });
     },
     listSessions: samples.listSessions,
