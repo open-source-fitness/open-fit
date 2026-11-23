@@ -54,7 +54,10 @@ integration; this schema does not implement an API or change the current UI.
 
 ## Database tests
 
-For the complete isolated migration and behavior check, run:
+Run these historical Supabase checks from the repository root at pre-cutover
+commit `63065abb17793d2b217d3b5d3161d1ae143da0ce`. Follow the
+[pinned setup guide](https://github.com/open-source-fitness/open-fit/blob/63065abb17793d2b217d3b5d3161d1ae143da0ce/docs/setup.md#verify-the-database-in-isolation)
+for prerequisites. For the complete isolated migration and behavior check, run:
 
 ```sh
 npm run test:db
@@ -71,7 +74,8 @@ only in that temporary database, never as automatic seed data. Future migrations
 are applied in order; once real migrations extending template storage exist, add
 appropriate pre-migration template sentinels rather than artificial migrations.
 
-For a faster behavior-only check after applying migrations to your own local backend, run:
+In the same checkout, for a faster behavior-only check after applying migrations
+to your own local backend, run:
 
 ```sh
 npx --yes supabase@3.1.0 test db
