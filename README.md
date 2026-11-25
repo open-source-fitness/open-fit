@@ -11,7 +11,7 @@ Contributors of all skill levels are welcome! For instructions on how to get inv
 
 ## Quickstart
 
-With Node.js 24 LTS and Expo Go for SDK 58 installed:
+With Node.js 24 LTS and The Expo Go mobile app installed, run the follwing:
 
 ```sh
 npm ci
