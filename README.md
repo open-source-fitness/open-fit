@@ -1,16 +1,13 @@
 # OpenFit
 
-OpenFit is a native mobile app for creating workout templates, recording workout
-sessions, and reviewing workout history. It is designed for people who want to
+OpenFit is a free native mobile app for assissting exercise and fitness, built in React Native using Expo. It is designed for people who want to
 plan and record their training on a phone without paying for a subscription.
 
-**Status**: Create, edit, and delete workout templates on one device. On first
-launch, enter a display name. The app stores the name and templates in SQLite.
-Workout history displays labeled sample data.
+**Status**: OpenFit is in early development. Currently template CRUD operations using local device storage with SQLite is supported. The RepDB exercise catalog is bundled into the app download, and supports search and filtering by muscle.
 
-The bundled RepDB catalog includes search, muscle-group filtering, equipment,
-exercise instructions, and illustrations. Add an exercise from the catalog
-while editing a template.
+## Contributing
+
+Contributors of all skill levels are welcome! For instructions on how to get involved and contribute, see the [contributing guidelines](./CONTRIBUTING.md). It will outline communication standards, how to setup your development environment for OpenFit, and where to find good first issues to work on.
 
 ## Quickstart
 
@@ -40,10 +37,9 @@ The design document for this project is found [here](./docs/design.md). It outli
 
 This is the starting point for understanding this project. 
 
-Use the [glossary](./agent-docs/GLOSSARY.md) for shared product terminology. The
-[architecture decision records](./docs/adr/README.md) explain the main frontend
-boundaries, and the [UI foundation decisions](./agent-docs/ui-foundation.md) capture the
-agreed scope and presentation choices for #38.
+Other docs include the [architecture decision records](./docs/adr/README.md) that explain build decisions made thus far.
+
+Documents intended for AI agents are stored in `agent-docs/`
 
 ## Roadmap
 
@@ -52,10 +48,6 @@ features planned next, longer-term ideas, and features outside the current plan.
 
 Track current work, priorities, and milestone progress on the
 [OpenFit MVP project board](https://github.com/orgs/open-source-fitness/projects/1).
-
-## Contributing
-
-For instructions on how to get involved and contribute, see the [contributing guidelines](./CONTRIBUTING.md)
 
 ## Maintainers:
 
