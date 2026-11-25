@@ -35,7 +35,7 @@ test('both poses use packaged images when browsing and after saving a template',
   await fireEvent.changeText(screen.getByLabelText('Exercise 1 set 1 reps'), '8');
   await fireEvent.press(screen.getByRole('button', { name: 'Done' }));
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  await fireEvent.press(await screen.findByRole('button', { name: 'Barbell Bench Press. 1 set' }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'Barbell Bench Press' }));
   expect(app.getPathname()).toBe('/templates/exercise');
   expect(screen.getByLabelText('Set 1: 8 reps × 10 lb')).toBeVisible();
   await expectBundledPoses();

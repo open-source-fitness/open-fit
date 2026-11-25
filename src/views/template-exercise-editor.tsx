@@ -27,8 +27,8 @@ export function TemplateExerciseEditorScreen() {
         changeSet: model.changeSet, removeSet: model.removeSet,
       }} />
       {!model.exercise.sets.length ? <Card><Copy>Add a set before saving the template.</Copy></Card> : null}
-      <Button label={`Add set to exercise ${model.exerciseNumber}`} disabled={model.saving} onPress={model.addSet} />
-      <Button label="Done" disabled={model.saving} onPress={backToTemplate} />
+      <Button label="Add set" disabled={model.saving} onPress={model.addSet} />
+      <Button label="Done" variant="primary" disabled={model.saving} onPress={backToTemplate} />
     </Screen>
   </>;
 }

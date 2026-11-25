@@ -21,7 +21,7 @@ export function CatalogExerciseDetailScreen() {
   return (
     <Screen>
       <Copy kind="title">{exercise.name}</Copy>
-      {selection.available ? <Button label="Add to template" onPress={() => {
+      {selection.available ? <Button label="Add to template" variant="primary" onPress={() => {
         if (selection.add(exercise)) router.dismissTo(draftId === 'new' ? '/templates/new' : { pathname: '/templates/[id]', params: { id: draftId! } });
       }} /> : null}
       <CatalogExerciseImages key={exercise.catalogId} images={images} name={exercise.name} />

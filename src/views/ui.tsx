@@ -13,6 +13,7 @@ import { useHeaderHeight } from 'expo-router/react-navigation';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '../viewmodels/theme';
+import { controlRadius, screenGutter } from '../theme/palette';
 import type { LoadState } from '../viewmodels/workouts';
 
 interface ScreenScroll {
@@ -78,10 +79,15 @@ export function Screen({ children }: PropsWithChildren) {
 export function Copy({
   children,
   kind = 'body',
-}: PropsWithChildren<{ kind?: 'title' | 'heading' | 'body' | 'muted' | 'label' }>) {
-  const { colors } = useTheme();
+}: PropsWithChildren<{ kind?: 'title' | 'heading' | 'body' | 'muted' | 'label' | 'value' }>) {
+  const { colors, displayFont } = useTheme();
+  const heading = kind === 'title' || kind === 'heading';
   return (
-    <Text style={[styles[kind], { color: kind === 'muted' ? colors.secondary : colors.text }]}>
+    <Text accessibilityRole={heading ? 'header' : undefined} style={[
+      styles[kind],
+      { color: kind === 'muted' || kind === 'label' ? colors.secondary : colors.text },
+      kind === 'title' && displayFont ? { fontFamily: displayFont, fontWeight: 'normal' } : undefined,
+    ]}>
       {children}
     </Text>
   );
@@ -90,13 +96,13 @@ export function Copy({
 export function FormError({ message }: { message: string }) {
   const { colors } = useTheme();
   if (!message) return null;
-  return <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={{ color: colors.text, fontSize: 16 }}>{message}</Text>;
+  return <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={{ color: colors.error, fontSize: 16 }}>{message}</Text>;
 }
 
 export function Card({ children }: PropsWithChildren) {
   const { colors } = useTheme();
   return (
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.text }]}>
       {children}
     </View>
   );
@@ -107,26 +113,36 @@ export function Button({
   accessibilityLabel,
   onPress,
   disabled = false,
+  variant = 'secondary',
+  icon,
 }: {
   label: string;
   accessibilityLabel?: string;
   onPress: () => void;
   disabled?: boolean;
+  variant?: 'primary' | 'secondary' | 'danger';
+  icon?: ComponentProps<typeof Ionicons>['name'];
 }) {
   const { colors } = useTheme();
+  const foreground = variant === 'primary' ? colors.onAccent : variant === 'danger' ? colors.error : colors.text;
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={accessibilityLabel ?? label}
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
         styles.button,
-        { backgroundColor: colors.selected, opacity: pressed || disabled ? 0.6 : 1 },
+        {
+          backgroundColor: variant === 'primary' ? colors.accent : undefined,
+          borderColor: variant === 'primary' ? colors.accent : variant === 'danger' ? colors.error : colors.secondary,
+          opacity: pressed || disabled ? 0.6 : 1,
+        },
       ]}
     >
-      <Text style={[styles.buttonText, { color: colors.onSelected }]}>{label}</Text>
+      {icon ? <Ionicons name={icon} size={18} color={foreground} accessible={false} /> : null}
+      <Text style={[styles.buttonText, { color: foreground }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -140,7 +156,7 @@ export function IconButton({ label, icon, onPress, disabled = false }: {
   const { colors } = useTheme();
   return <Pressable accessibilityRole="button" accessibilityLabel={label}
     accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
-    style={({ pressed }) => ({ minWidth: 48, minHeight: 48, alignItems: 'center', justifyContent: 'center', opacity: disabled || pressed ? 0.5 : 1 })}>
+    style={({ pressed }) => ({ minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center', opacity: disabled || pressed ? 0.5 : 1 })}>
     <Ionicons name={icon} size={24} color={colors.text} accessible={false} />
   </Pressable>;
 }
@@ -149,35 +165,37 @@ export function LinkCard({
   title,
   subtitle,
   detail,
-  icon,
   onPress,
 }: {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   detail?: string;
-  icon: ComponentProps<typeof Ionicons>['name'];
   onPress: () => void;
 }) {
   const { colors } = useTheme();
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${title}. ${[subtitle, detail].filter(Boolean).join(' ')}`}
+      accessibilityLabel={[title, [subtitle, detail].filter(Boolean).join(' ')].filter(Boolean).join('. ')}
       onPress={onPress}
       style={({ pressed }) => [
         styles.link,
-        { backgroundColor: colors.surface, borderColor: colors.border, opacity: pressed ? 0.65 : 1 },
+        { backgroundColor: pressed ? colors.surfaceStrong : undefined, borderColor: colors.border },
       ]}
     >
-      <Ionicons name={icon} size={26} color={colors.accent} accessible={false} />
       <View style={styles.linkText}>
         <Copy kind="heading">{title}</Copy>
-        <Copy kind="muted">{subtitle}</Copy>
-        {detail ? <Copy>{detail}</Copy> : null}
+        {subtitle ? <Copy kind="muted">{subtitle}</Copy> : null}
+        {detail ? <Copy kind="muted">{detail}</Copy> : null}
       </View>
-      <Ionicons name="chevron-forward" size={20} color={colors.text} accessible={false} />
+      <Ionicons name="chevron-forward" size={18} color={colors.secondary} accessible={false} />
     </Pressable>
   );
+}
+
+export function RuledList({ children }: PropsWithChildren) {
+  const { colors } = useTheme();
+  return <View style={{ borderTopWidth: 2, borderTopColor: colors.text }}>{children}</View>;
 }
 
 export function Resource<T>({
@@ -203,23 +221,26 @@ export function Resource<T>({
 }
 
 const styles = StyleSheet.create({
-  screen: { padding: 24, gap: 20, paddingBottom: 32, maxWidth: 700, width: '100%', alignSelf: 'center' },
-  title: { fontSize: 32, fontWeight: '700', letterSpacing: -0.8 },
-  heading: { fontSize: 20, fontWeight: '600' },
+  screen: { paddingHorizontal: screenGutter, paddingTop: 24, gap: 16, paddingBottom: 32, maxWidth: 700, width: '100%', alignSelf: 'center' },
+  title: { fontSize: 34, fontWeight: '800', letterSpacing: -0.4, textTransform: 'uppercase' },
+  heading: { fontSize: 17, fontWeight: '600' },
   body: { fontSize: 16, lineHeight: 24 },
-  muted: { fontSize: 15, lineHeight: 23 },
-  label: { fontSize: 12, fontWeight: '700', letterSpacing: 2 },
-  card: { padding: 20, gap: 12, borderRadius: 18, borderWidth: 1 },
+  muted: { fontSize: 14, lineHeight: 20 },
+  label: { fontSize: 14, fontWeight: '600' },
+  value: { fontSize: 16, fontVariant: ['tabular-nums'] },
+  card: { padding: 16, gap: 12, borderTopWidth: 2 },
   link: {
-    padding: 20,
+    padding: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
-    borderRadius: 18,
-    borderWidth: 1,
-    minHeight: 88,
+    gap: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    minHeight: 60,
   },
-  linkText: { flex: 1, gap: 6 },
-  button: { padding: 16, borderRadius: 12, minHeight: 48, alignItems: 'center' },
-  buttonText: { fontSize: 16, fontWeight: '600' },
+  linkText: { flex: 1, gap: 3 },
+  button: {
+    paddingHorizontal: 12, paddingVertical: 8, borderRadius: controlRadius, borderWidth: 1,
+    minHeight: 44, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center',
+  },
+  buttonText: { fontSize: 14, fontWeight: '600', flexShrink: 1 },
 });

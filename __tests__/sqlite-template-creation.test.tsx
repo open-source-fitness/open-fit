@@ -98,9 +98,9 @@ test('requires a local name, then saves and reopens a template with the bundled 
   await fireEvent.changeText(screen.getByLabelText('Exercise 1 set 1 reps'), '8');
   await fireEvent.press(screen.getByRole('button', { name: 'Done' }));
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  await screen.findByRole('button', { name: 'Edit template details' });
+  await screen.findByRole('button', { name: 'Edit Template' });
   await fireEvent.press(screen.getByRole('button', { name: /^Workouts, tab/ }));
-  expect(await screen.findByText('Sample workout history')).toBeVisible();
+  expect(await screen.findByText('Sample workouts')).toBeVisible();
 
   await cleanup();
   for (const connection of connections.splice(0)) connection.close();
@@ -108,7 +108,7 @@ test('requires a local name, then saves and reopens a template with the bundled 
   expect(await screen.findByText('Hi, Alex!')).toBeVisible();
   expect(app.getPathname()).toBe('/templates');
   await fireEvent.press(await screen.findByRole('button', { name: /^Offline plan/ }));
-  await fireEvent.press(await screen.findByRole('button', { name: 'Edit template details' }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'Edit Template' }));
   await fireEvent.changeText(screen.getByLabelText('Template title'), 'Revised plan');
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
   expect(await screen.findByText('Revised plan')).toBeVisible();
@@ -221,7 +221,7 @@ test('an earlier SQLite database keeps its template through onboarding, a rename
   expect(await screen.findByText('Hi, Blair!')).toBeVisible();
   await fireEvent.press(await screen.findByRole('button', { name: /^Earlier plan/ }));
   expect(await screen.findByText('Saved in schema version 2')).toBeVisible();
-  await fireEvent.press(screen.getByRole('button', { name: 'Saved press. 1 set' }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Saved press' }));
   expect(await screen.findByLabelText('Set 1: 8 reps × 12.5 lb')).toBeVisible();
   await fireEvent.press(screen.getByRole('button', { name: /^Settings, tab/ }));
   expect(screen.getByRole('radio', { name: 'Dark' })).toBeChecked();
@@ -251,7 +251,7 @@ async function addExercise(name: string, placement: number, targets: [string, st
   await fireEvent.press(screen.getByRole('button', { name: 'Add to template' }));
   await fireEvent.press(screen.getByRole('button', { name: `Sets for exercise ${placement}` }));
   for (const [index, [weight, reps]] of targets.entries()) {
-    if (index > 0) await fireEvent.press(screen.getByRole('button', { name: `Add set to exercise ${placement}` }));
+    if (index > 0) await fireEvent.press(screen.getByRole('button', { name: 'Add set' }));
     await fireEvent.changeText(screen.getByLabelText(`Exercise ${placement} set ${index + 1} weight (lb)`), weight);
     await fireEvent.changeText(screen.getByLabelText(`Exercise ${placement} set ${index + 1} reps`), reps);
   }
@@ -268,7 +268,7 @@ test('opens a complete saved template after closing the app and reopening the da
   await addExercise('Catalog row', 2, [['20', '5']]);
   await addExercise('Catalog press', 3, [['0', '12']]);
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  await screen.findByRole('button', { name: 'Edit template details' });
+  await screen.findByRole('button', { name: 'Edit Template' });
   const [saved] = await storage.listTemplates();
   expect(new Set(saved.exercises.map(exercise => exercise.id)).size).toBe(3);
 
@@ -276,7 +276,7 @@ test('opens a complete saved template after closing the app and reopening the da
   await startDraft('Another plan');
   await addExercise('Catalog press', 1, [['0', '5']]);
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  await screen.findByRole('button', { name: 'Edit template details' });
+  await screen.findByRole('button', { name: 'Edit Template' });
 
   await cleanup();
   for (const connection of connections.splice(0)) connection.close();
@@ -294,11 +294,11 @@ test('opens a complete saved template after closing the app and reopening the da
   expect((await reopened.listTemplates()).map(template => template.title)).toEqual(['Gym plan', 'Another plan']);
   await fireEvent.press(await screen.findByRole('button', { name: /Gym plan.*3 exercises · 4 sets/ }));
   expect(await screen.findByText('First day')).toBeVisible();
-  expect(screen.getAllByRole('button', { name: /^Catalog (press|row)\. \d sets?$/ })
+  expect(screen.getAllByRole('button', { name: /^Catalog (press|row)$/ })
     .map(button => button.props.accessibilityLabel)).toEqual([
-    'Catalog press. 2 sets', 'Catalog row. 1 set', 'Catalog press. 1 set',
+    'Catalog press', 'Catalog row', 'Catalog press',
   ]);
-  await fireEvent.press(screen.getByRole('button', { name: 'Catalog press. 2 sets' }));
+  await fireEvent.press(screen.getAllByRole('button', { name: 'Catalog press' })[0]);
   expect(await screen.findByLabelText('Set 1: 8 reps × 12.5 lb')).toBeVisible();
   expect(screen.getByLabelText('Set 2: 6 reps × 15 lb')).toBeVisible();
   const packagedImage = [expect.objectContaining({ __packager_asset: true })];
@@ -330,7 +330,7 @@ test.each([false, true])('retries a lost save response with the same identity (e
   if (edited) await fireEvent.changeText(screen.getByLabelText('Template title'), title);
 
   await fireEvent.press(screen.getByRole('button', { name: 'Retry save' }));
-  await screen.findByRole('button', { name: 'Edit template details' });
+  await screen.findByRole('button', { name: 'Edit Template' });
   expect(await storage.listTemplates()).toEqual([{ ...committed[0], title }]);
 });
 
@@ -351,17 +351,17 @@ test('Cancel after a lost creation response gives the next draft its own saved t
   await startDraft('Second plan');
   await addExercise('Catalog press', 1, [['25', '6']]);
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  await screen.findByRole('button', { name: 'Edit template details' });
+  await screen.findByRole('button', { name: 'Edit Template' });
 
   await cleanup();
   await templates(service());
   await fireEvent.press(await screen.findByRole('button', { name: /^First plan/ }));
-  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press. 1 set' }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press' }));
   expect(await screen.findByLabelText('Set 1: 8 reps × 12.5 lb')).toBeVisible();
   await testRouter.back();
   await testRouter.back('/templates');
   await fireEvent.press(await screen.findByRole('button', { name: /^Second plan/ }));
-  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press. 1 set' }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press' }));
   expect(await screen.findByLabelText('Set 1: 6 reps × 25 lb')).toBeVisible();
 });
 
@@ -386,7 +386,7 @@ test('rolls back the complete save when SQLite rejects the creation receipt', as
   }
 
   await fireEvent.press(screen.getByRole('button', { name: 'Retry save' }));
-  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press. 2 sets' }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press' }));
   expect(await screen.findByLabelText('Set 1: 12 reps × 0 lb')).toBeVisible();
   expect(screen.getByLabelText('Set 2: 6 reps × 20 lb')).toBeVisible();
   expect(await service().listTemplates()).toHaveLength(1);
@@ -400,18 +400,18 @@ test('cancels a draft and durably saves reordered and replaced exercises in the 
   await addExercise('Catalog row', 2, [['20', '5']]);
   await addExercise('Catalog press', 3, [['0', '12']]);
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  await screen.findByRole('button', { name: 'Edit template details' });
+  await screen.findByRole('button', { name: 'Edit Template' });
   const [original] = await storage.listTemplates();
   await storage.createTemplate({ ...original, title: 'Another plan' });
 
-  await fireEvent.press(screen.getByRole('button', { name: 'Edit template details' }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Edit Template' }));
   await fireEvent.changeText(screen.getByLabelText('Template title'), 'Discarded title');
   await fireEvent.press(screen.getByRole('button', { name: 'Move exercise 3 up' }));
   await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
   expect(await screen.findByText('Original plan')).toBeVisible();
   expect(await storage.getTemplate(original.id)).toEqual(original);
 
-  await fireEvent.press(screen.getByRole('button', { name: 'Edit template details' }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Edit Template' }));
   await fireEvent.changeText(screen.getByLabelText('Template title'), 'Edited plan');
   await fireEvent.changeText(screen.getByLabelText('Template description'), 'Second day');
   await fireEvent.press(screen.getByRole('button', { name: 'Move exercise 3 up' }));
@@ -419,7 +419,7 @@ test('cancels a draft and durably saves reordered and replaced exercises in the 
   await fireEvent.press(screen.getByRole('button', { name: 'Remove exercise 3' }));
   await addExercise('Catalog row', 3, [['25', '10']]);
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  await screen.findByRole('button', { name: 'Edit template details' });
+  await screen.findByRole('button', { name: 'Edit Template' });
 
   await cleanup();
   for (const connection of connections.splice(0)) connection.close();
@@ -436,7 +436,7 @@ test('cancels a draft and durably saves reordered and replaced exercises in the 
   expect(original.exercises.map(exercise => exercise.id)).not.toContain(edited.exercises[2].id);
   expect(other.title).toBe('Another plan');
   await fireEvent.press(await screen.findByRole('button', { name: /Edited plan.*3 exercises · 4 sets/ }));
-  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press. 1 set' }));
+  await fireEvent.press((await screen.findAllByRole('button', { name: 'Catalog press' }))[0]);
   expect(await screen.findByLabelText('Set 1: 12 reps × 0 lb')).toBeVisible();
 });
 
@@ -470,7 +470,7 @@ test('replays a metadata save after a lost response without reverting a newer wh
   await startDraft('Original plan');
   await addExercise('Catalog press', 1, [['12.5', '8']]);
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  await screen.findByRole('button', { name: 'Edit template details' });
+  await screen.findByRole('button', { name: 'Edit Template' });
   const [original] = await storage.listTemplates();
   const context = {};
   const details = { title: '  Renamed plan  ', description: 'Saved description' };
@@ -493,7 +493,7 @@ test('replays a metadata save after a lost response without reverting a newer wh
   await templates(service(), false);
   await fireEvent.press(await screen.findByRole('button', { name: /^Latest plan/ }));
   expect(await screen.findByText('Saved description')).toBeVisible();
-  await fireEvent.press(screen.getByRole('button', { name: 'Catalog press. 1 set' }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Catalog press' }));
   expect(await screen.findByLabelText('Set 1: 6 reps × 25 lb')).toBeVisible();
 });
 
@@ -573,7 +573,7 @@ test('retries a rolled-back edit and separately recovers a failed reload after t
   await startDraft('Original plan');
   await addExercise('Catalog press', 1, [['12.5', '8']]);
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  await fireEvent.press(await screen.findByRole('button', { name: 'Edit template details' }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'Edit Template' }));
   const [original] = await storage.listTemplates();
   await fireEvent.changeText(screen.getByLabelText('Template title'), 'Edited plan');
   await addExercise('Catalog row', 2, [['25', '6']]);
@@ -599,7 +599,7 @@ test('retries a rolled-back edit and separately recovers a failed reload after t
   await fireEvent.press(screen.getByRole('button', { name: 'Try again' }));
   expect(await screen.findByText('Edited plan')).toBeVisible();
   expect(screen.queryByRole('button', { name: 'Retry save' })).toBeNull();
-  await fireEvent.press(screen.getByRole('button', { name: 'Catalog row. 1 set' }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Catalog row' }));
   expect(await screen.findByLabelText('Set 1: 6 reps × 25 lb')).toBeVisible();
 });
 
@@ -614,7 +614,7 @@ test('recovers a lost whole-template save after a newer save removes a saved pla
   await startDraft('Original plan');
   await addExercise('Catalog press', 1, [['12.5', '8']]);
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  await fireEvent.press(await screen.findByRole('button', { name: 'Edit template details' }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'Edit Template' }));
   const [original] = await storage.listTemplates();
   await fireEvent.changeText(screen.getByLabelText('Template title'), 'First edit');
   await addExercise('Catalog row', 2, [['25', '6']]);

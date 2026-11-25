@@ -3,12 +3,17 @@ import { Image } from 'expo-image';
 import { ActivityIndicator, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import type { ExerciseImages } from '../models/exercise';
 import { exerciseImageSource } from '../services/exercise-image-source';
+import { screenGutter } from '../theme/palette';
 import { useTheme } from '../viewmodels/theme';
 import { Button, Copy } from './ui';
 
-export function CatalogExerciseImages({ images, name }: { images?: ExerciseImages; name: string }) {
+export function CatalogExerciseImages({ images, name, maxImageSize }: {
+  images?: ExerciseImages;
+  name: string;
+  maxImageSize?: number;
+}) {
   const window = useWindowDimensions();
-  const [width, setWidth] = useState(Math.max(1, Math.min(window.width, 700) - 48));
+  const [width, setWidth] = useState(Math.max(1, Math.min(window.width, 700) - screenGutter * 2));
   const [active, setActive] = useState(0);
   const scroll = useRef<ComponentRef<typeof ScrollView>>(null);
   const pages = images?.preferred === 'pair'
@@ -39,7 +44,8 @@ export function CatalogExerciseImages({ images, name }: { images?: ExerciseImage
       >
         {pages.map((page, index) => (
           <View key={page.label} style={{ width }} accessibilityElementsHidden={index !== active} importantForAccessibility={index === active ? 'auto' : 'no-hide-descendants'}>
-            <CatalogImage key={page.reference} reference={page.reference} name={name} label={page.label} />
+            <CatalogImage key={page.reference} reference={page.reference} name={name} label={page.label}
+              size={Math.min(width, maxImageSize ?? width)} />
           </View>
         ))}
       </ScrollView>
@@ -54,11 +60,16 @@ export function CatalogExerciseImages({ images, name }: { images?: ExerciseImage
   );
 }
 
-function CatalogImage({ reference, name, label }: { reference: string | undefined; name: string; label: string }) {
+function CatalogImage({ reference, name, label, size }: {
+  reference: string | undefined;
+  name: string;
+  label: string;
+  size: number;
+}) {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'failed'>(reference ? 'loading' : 'failed');
   const { colors } = useTheme();
   return (
-    <View style={[styles.image, { backgroundColor: colors.surface }]}>
+    <View style={[styles.image, { backgroundColor: colors.surface, width: size, height: size }]}>
       {status === 'failed' ? <Copy>Image unavailable</Copy> : (
         <Image
           accessible
@@ -80,5 +91,5 @@ const styles = StyleSheet.create({
   gallery: { gap: 12 },
   controls: { flexDirection: 'row', gap: 12 },
   control: { flex: 1 },
-  image: { width: '100%', aspectRatio: 1, justifyContent: 'center', alignItems: 'center' },
+  image: { alignSelf: 'center', justifyContent: 'center', alignItems: 'center' },
 });
