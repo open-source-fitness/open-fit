@@ -48,6 +48,12 @@ expect that instead.
 
 **The reason**: Protecting the `main` branch by limiting merge permissions will keep the production code safe. Squash and merge will keep the history clean and linear, and allow entire features to be rolled back with one command if necessary.
 
+## Branch Hygiene
+
+ **The rule**: Once a maintainer merges a PR and completes a production audit, the merged branch should be deleted on the remote and local copies of the repo.
+
+ **The reason**: Leaving lots of merged branches in the repo causes clutter and makes it difficult to sort through active branches. Keeping the branches limited to those in active development will create a better contributing environment.
+
 ## Definition of done
 
 **The rule**: A PR is merged to `main` after adequate review and passing tests locally and in CI. Use `npm run test` from the repo root for local tests. A CI pipeline has not been configured yet. Additionally, the PR must then be audited in the production environment to ensure functionality.
