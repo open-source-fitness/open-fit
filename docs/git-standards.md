@@ -32,9 +32,9 @@ expect that instead.
 
 ## Pull requests
 
-**The rule**: Changes that resolve one issue, or 1,000 lines, whichever comes first. If an issue's resolution requires more than 1,000 lines of code, it should be decomposed.
+**The rule**: Changes that resolve one issue, or 1,000 lines, whichever comes first. If an issue's resolution requires more than 1,000 lines of code, it should be converted into a [stacked PR](https://docs.github.com/en/pull-requests/how-tos/stacked-pull-requests).
 
-**The reason**: PRs should be easily human reviewable, so they should be kept small and manageable in size.
+**The reason**: PRs should be easily human reviewable, even if agents are reviewing them, so they should be kept small and manageable in size.
 
 ## Review
 
