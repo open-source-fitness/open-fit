@@ -17,7 +17,7 @@ async function builder(service = createSampleWorkoutService(), failure = false) 
 }
 async function editSample() {
   await fireEvent.press(await screen.findByRole('button', { name: /Upper body/ }));
-  await fireEvent.press(screen.getByRole('button', { name: 'Edit template details' }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Edit Template' }));
 }
 async function addCatalogExercise() {
   await fireEvent.press(screen.getByRole('button', { name: 'Add exercise' }));
@@ -104,14 +104,14 @@ test('create from an empty draft, retry an atomic save and reopen the new templa
   expect(screen.getByLabelText('Exercise 1 set 1 weight (lb)')).toHaveDisplayValue('0');
   await fireEvent.press(screen.getByRole('button', { name: 'Done' }));
   await fireEvent.press(screen.getByRole('button', { name: 'Retry save' }));
-  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press. 1 set' }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press' }));
   expect(await screen.findByLabelText('Set 1: 12 reps × 0 lb')).toBeVisible();
   expect(app.getPathname()).not.toBe('/templates/new');
   await testRouter.back();
   await testRouter.back('/templates');
   expect(await screen.findByRole('button', { name: /Upper body.*1 exercise · 1 set/ })).toBeVisible();
   await fireEvent.press(screen.getByRole('button', { name: /Upper body.*1 exercise · 1 set/ }));
-  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press. 1 set' }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'Catalog press' }));
   expect(await screen.findByLabelText('Set 1: 12 reps × 0 lb')).toBeVisible();
 });
 
@@ -148,7 +148,7 @@ test('a repetition target outside storage range is correctable before saving', a
   await fireEvent.changeText(screen.getByLabelText('Exercise 1 set 1 reps'), '2147483647');
   await fireEvent.press(screen.getByRole('button', { name: 'Done' }));
   await fireEvent.press(screen.getByRole('button', { name: 'Retry save' }));
-  await screen.findByRole('button', { name: 'Edit template details' });
+  await screen.findByRole('button', { name: 'Edit Template' });
   expect((await service.getTemplate('upper-body'))?.exercises[0].sets[0].targetReps).toBe(2147483647);
 });
 
@@ -156,7 +156,7 @@ test('reordering uses edit-only handles and saves placement order with the origi
   const { service } = await builder();
   await fireEvent.press(await screen.findByRole('button', { name: /Upper body/ }));
   expect(screen.queryByRole('button', { name: 'Reorder exercise 1' })).toBeNull();
-  await fireEvent.press(screen.getByRole('button', { name: 'Edit template details' }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Edit Template' }));
   expect(screen.getByRole('button', { name: 'Reorder exercise 1' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'Move exercise 1 up' })).toBeDisabled();
   await fireEvent.press(screen.getByRole('button', { name: 'Move exercise 2 up' }));
@@ -164,12 +164,12 @@ test('reordering uses edit-only handles and saves placement order with the origi
   expect(screen.getByLabelText('Exercise 1 set 1 weight (lb)')).toHaveDisplayValue('35');
   await fireEvent.press(screen.getByRole('button', { name: 'Done' }));
   await fireEvent.press(screen.getByRole('button', { name: 'Save' }));
-  expect(await screen.findByRole('button', { name: 'Edit template details' })).toBeVisible();
+  expect(await screen.findByRole('button', { name: 'Edit Template' })).toBeVisible();
   expect(screen.queryByRole('button', { name: 'Reorder exercise 1' })).toBeNull();
   const saved = await service.getTemplate('upper-body');
   expect(saved?.exercises.map((exercise) => exercise.id)).toEqual(['placement-dumbbell-row', 'placement-bench-press']);
   expect(saved?.exercises[0].sets[0]).toEqual({ setNumber: 1, targetWeight: 35, targetReps: 10 });
-  await fireEvent.press(screen.getByRole('button', { name: 'Edit template details' }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Edit Template' }));
   await fireEvent.press(screen.getByRole('button', { name: 'Move exercise 1 down' }));
   await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
   expect((await service.getTemplate('upper-body'))?.exercises[0].id).toBe('placement-dumbbell-row');
@@ -219,7 +219,7 @@ test('pending deletion disables duplicate changes and navigation until it settle
   await fireEvent.press(screen.getByRole('button', { name: 'Delete template' }));
   await act(async () => alert.mock.calls.at(-1)?.[2]?.find((button) => button.text === 'Delete')?.onPress?.());
   expect(screen.getByRole('button', { name: 'Deleting…' })).toBeDisabled();
-  expect(screen.getByRole('button', { name: 'Edit template details' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Edit Template' })).toBeDisabled();
   expect(screen.getByRole('button', { name: /^Workouts, tab/ })).toBeDisabled();
   await testRouter.back();
   expect(app.getPathname()).toBe('/templates/upper-body');

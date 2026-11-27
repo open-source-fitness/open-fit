@@ -11,12 +11,15 @@ test('saved template overview opens an exercise image and compact read-only sets
   })) });
   const app = await renderRouter({ appDir: './app', overrides: { _layout: () => <RootLayout workoutServiceFactory={() => service} displayNameStore={namedDisplayStore} /> } });
   await fireEvent.press(await screen.findByRole('button', { name: /Upper body/ }));
-  expect(screen.getByRole('button', { name: 'Bench press. 3 sets' })).toBeVisible();
-  expect(screen.queryByText(/95 lb/)).toBeNull();
+  expect(screen.getByRole('button', { name: 'Bench press' })).toBeVisible();
+  expect(screen.queryByLabelText('Set 1: 8 reps × 95 lb')).toBeNull();
+  expect(screen.queryByText('3 sets')).toBeNull();
   expect(screen.queryByRole('image')).toBeNull();
-  await fireEvent.press(screen.getByRole('button', { name: 'Bench press. 3 sets' }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Bench press' }));
   expect(app.getPathname()).toBe('/templates/exercise');
   expect(await screen.findByRole('image', { name: 'Bench press — Illustration image' })).toHaveProp('source', [{ uri: 'https://example.org/saved-exercise.webp' }]);
+  expect(screen.getByText('Primary muscles · Chest')).toBeVisible();
+  expect(screen.getByText('Secondary muscles · Triceps')).toBeVisible();
   expect(screen.getByLabelText('Set 1: 8 reps × 95 lb')).toBeVisible();
   expect(screen.getByLabelText('Set 3: 8 reps × 115 lb')).toBeVisible();
   expect(screen.queryByLabelText('Exercise 1 set 1 reps')).toBeNull();
@@ -26,7 +29,7 @@ test('saved template overview opens an exercise image and compact read-only sets
   expect(screen.getByLabelText('Set 1: 8 reps × 95 lb')).toBeVisible();
   await testRouter.back();
   expect(app.getPathname()).toBe('/templates/upper-body');
-  expect(screen.getByRole('button', { name: 'Dumbbell row. 2 sets' })).toBeVisible();
+  expect(screen.getByRole('button', { name: 'Dumbbell row' })).toBeVisible();
 });
 
 test('saved exercise detail handles missing imagery and missing placements without exposing editors', async () => {

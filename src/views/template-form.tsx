@@ -1,8 +1,9 @@
 import { useRouter } from 'expo-router';
 import { TextInput, View } from 'react-native';
 import type { useTemplateEditorViewModel } from '../viewmodels/template-editor';
+import { controlRadius } from '../theme/palette';
 import { useTheme } from '../viewmodels/theme';
-import { Button, Card, Copy, IconButton } from './ui';
+import { Button, Card, Copy, FormError, IconButton } from './ui';
 import { ReorderableExercises } from './reorderable-exercises';
 
 type Editor = ReturnType<typeof useTemplateEditorViewModel>;
@@ -12,10 +13,10 @@ function TemplateField({ label, value, onChange, disabled, multiline = false }: 
 }) {
   const { colors } = useTheme();
   return <>
-    <Copy>{label}</Copy>
+    <Copy kind="label">{label}</Copy>
     <TextInput accessibilityLabel={label} value={value} onChangeText={onChange}
       editable={!disabled} accessibilityState={{ disabled }} multiline={multiline}
-      style={{ borderWidth: 1, borderColor: colors.border, borderRadius: 10,
+      style={{ borderWidth: 1, borderColor: colors.secondary, borderRadius: controlRadius,
         backgroundColor: colors.background, color: colors.text, padding: 12, fontSize: 16,
         minHeight: multiline ? 96 : 48, ...(multiline ? { textAlignVertical: 'top' } : {}) }} />
   </>;
@@ -27,7 +28,6 @@ export function TemplateForm({ model }: { model: Editor }) {
   if (!draft) return null;
   return <>
     <Card>
-      <Copy kind="heading">Edit template</Copy>
       <TemplateField label="Template title" value={draft.title} onChange={(value) => model.change('title', value)} disabled={model.saving} />
       <TemplateField label="Template description" value={draft.description} onChange={(value) => model.change('description', value)} disabled={model.saving} multiline />
     </Card>
@@ -43,8 +43,8 @@ export function TemplateForm({ model }: { model: Editor }) {
       <Copy kind="muted">{exercise.sets.length} {exercise.sets.length === 1 ? 'set' : 'sets'}</Copy>
     </Card>}</ReorderableExercises>
     <Button label="Add exercise" disabled={model.saving} onPress={() => router.push({ pathname: '/templates/catalog', params: { draftId: model.id } })} />
-    {model.error ? <Copy>{model.error}</Copy> : null}
-    <Button label={model.saving ? 'Saving…' : model.error ? 'Retry save' : 'Save'} disabled={model.saving} onPress={() => void model.save()} />
+    <FormError message={model.error ?? ''} />
+    <Button variant="primary" label={model.saving ? 'Saving…' : model.error ? 'Retry save' : 'Save'} disabled={model.saving} onPress={() => void model.save()} />
     <Button label="Cancel" disabled={model.saving} onPress={model.cancelEditing} />
   </>;
 }

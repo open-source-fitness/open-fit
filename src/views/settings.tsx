@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import type { ThemePreference } from '../services/theme-preference-store';
 import { useDisplayName } from '../viewmodels/display-name';
 import { useTheme } from '../viewmodels/theme';
@@ -11,6 +12,7 @@ export function SettingsScreen() {
   const [editing, setEditing] = useState(false);
   return (
     <Screen>
+      <Copy kind="title">Settings</Copy>
       <Card>
         {editing ? (
           <DisplayNameForm initialName={displayName ?? ''} onDone={() => setEditing(false)} />
@@ -46,8 +48,8 @@ function AppearanceSettings() {
   return (
     <Card>
       <Copy kind="heading">Appearance</Copy>
-      <Copy kind="muted">Choose your look. System follows your phone’s appearance.</Copy>
-      <View accessibilityRole="radiogroup" style={{ gap: 8 }}>
+      <Copy kind="muted">System follows your phone’s appearance.</Copy>
+      <View accessibilityRole="radiogroup">
         {options.map(({ value, label }) => {
           const selected = model.preference === value;
           return (
@@ -60,15 +62,18 @@ function AppearanceSettings() {
               onPress={() => void model.selectPreference(value)}
               style={({ pressed }) => ({
                 minHeight: 48,
-                padding: 16,
-                borderRadius: 12,
-                borderWidth: 1,
+                paddingHorizontal: 12,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderBottomWidth: StyleSheet.hairlineWidth,
                 borderColor: model.colors.border,
-                backgroundColor: selected ? model.colors.selected : model.colors.background,
+                backgroundColor: selected ? model.colors.surfaceStrong : model.colors.background,
                 opacity: pressed || disabled ? 0.6 : 1,
               })}
             >
-              <CopySelection label={label} selected={selected} />
+              <Copy>{label}</Copy>
+              {selected ? <Ionicons name="checkmark" size={20} color={model.colors.text} accessible={false} /> : null}
             </Pressable>
           );
         })}
@@ -76,15 +81,5 @@ function AppearanceSettings() {
       <FormError message={model.error ?? ''} />
       <Copy kind="muted">{preferenceStatus}</Copy>
     </Card>
-  );
-}
-
-function CopySelection({ label, selected }: { label: string; selected: boolean }) {
-  const { colors } = useTheme();
-  return (
-    <Text style={{ fontSize: 16, fontWeight: '600', color: selected ? colors.onSelected : colors.text }}>
-      {label}
-      {selected ? '  ✓' : ''}
-    </Text>
   );
 }

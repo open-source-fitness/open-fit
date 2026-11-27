@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Modal, StyleSheet, TextInput, View } from 'react-native';
+import { controlRadius } from '../theme/palette';
 import { useDisplayName } from '../viewmodels/display-name';
 import { useTheme } from '../viewmodels/theme';
 import { Button, Card, Copy, FormError, Screen } from './ui';
@@ -19,7 +20,7 @@ export function OnboardingScreen() {
               <Card>
                 <Copy kind="heading">Local storage</Copy>
                 <Copy>Training data is stored on this device. OpenFit doesn’t offer backup or recovery yet.</Copy>
-                <Button label="Got it" onPress={dismissNotice} />
+                <Button variant="primary" label="Got it" onPress={dismissNotice} />
               </Card>
             </View>
           </View>
@@ -74,7 +75,7 @@ export function DisplayNameForm({ initialName, onDone }: { initialName: string; 
   }
 
   return <>
-    <Copy>Display name</Copy>
+    <Copy kind="label">Display name</Copy>
     <TextInput
       accessibilityLabel="Display name"
       accessibilityState={{ disabled: saving }}
@@ -85,12 +86,12 @@ export function DisplayNameForm({ initialName, onDone }: { initialName: string; 
       onChangeText={setName}
       editable={!saving}
       style={{
-        borderWidth: 1, borderColor: colors.border, color: colors.text,
-        backgroundColor: colors.background, borderRadius: 12, padding: 16, minHeight: 52, fontSize: 18,
+        borderWidth: 1, borderColor: colors.secondary, color: colors.text,
+        backgroundColor: colors.background, borderRadius: controlRadius, padding: 12, minHeight: 48, fontSize: 16,
       }}
     />
     <FormError message={error} />
-    <Button label={saving ? 'Saving…' : onDone ? 'Save name' : 'Continue'} disabled={saving} onPress={() => void save()} />
+    <Button variant="primary" label={saving ? 'Saving…' : onDone ? 'Save name' : 'Continue'} disabled={saving} onPress={() => void save()} />
     {onDone ? <Button label="Cancel" disabled={saving} onPress={onDone} /> : null}
   </>;
 }

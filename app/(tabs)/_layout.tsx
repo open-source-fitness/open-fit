@@ -1,11 +1,10 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router/js-tabs';
 import { PlatformPressable } from 'expo-router/react-navigation';
-import { useTheme } from '../../src/viewmodels/theme';
+import { chrome } from '../../src/theme/palette';
 import { useWorkouts } from '../../src/viewmodels/workout-provider';
 
 export default function TabsLayout() {
-  const { colors } = useTheme();
   const { savingTemplate } = useWorkouts();
   return (
     <Tabs
@@ -17,16 +16,20 @@ export default function TabsLayout() {
       }}
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.text,
-        tabBarInactiveTintColor: colors.secondary,
-        tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
+        tabBarActiveTintColor: chrome.text,
+        tabBarInactiveTintColor: chrome.secondary,
+        tabBarStyle: { backgroundColor: chrome.background, borderTopColor: chrome.border },
         tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
         tabBarButton: (props) => (
           <PlatformPressable
             {...props}
             disabled={savingTemplate}
             accessibilityState={{ ...props.accessibilityState, disabled: savingTemplate }}
-            style={[props.style, { opacity: savingTemplate ? 0.5 : 1 }]}
+            style={[props.style, {
+              opacity: savingTemplate ? 0.5 : 1,
+              borderTopWidth: 3,
+              borderTopColor: props['aria-selected'] ? chrome.accent : chrome.background,
+            }]}
           />
         ),
       }}
@@ -36,7 +39,7 @@ export default function TabsLayout() {
         options={{
           title: 'Templates',
           tabBarIcon: ({ focused, size }) => (
-            <Ionicons name="barbell-outline" color={focused ? colors.text : colors.secondary} size={size} />
+            <Ionicons name="list-outline" color={focused ? chrome.text : chrome.secondary} size={size} />
           ),
         }}
       />
@@ -45,7 +48,7 @@ export default function TabsLayout() {
         options={{
           title: 'Workouts',
           tabBarIcon: ({ focused, size }) => (
-            <Ionicons name="time-outline" color={focused ? colors.text : colors.secondary} size={size} />
+            <Ionicons name="time-outline" color={focused ? chrome.text : chrome.secondary} size={size} />
           ),
         }}
       />
@@ -54,7 +57,7 @@ export default function TabsLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ focused, size }) => (
-            <Ionicons name="settings-outline" color={focused ? colors.text : colors.secondary} size={size} />
+            <Ionicons name="settings-outline" color={focused ? chrome.text : chrome.secondary} size={size} />
           ),
         }}
       />

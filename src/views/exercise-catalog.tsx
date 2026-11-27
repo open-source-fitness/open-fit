@@ -2,7 +2,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, Linking, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useExerciseCatalogViewModel, type CatalogExerciseSummary } from '../viewmodels/exercise-catalog';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { controlRadius, screenGutter } from '../theme/palette';
+import { useExerciseCatalogViewModel } from '../viewmodels/exercise-catalog';
 import { useTheme } from '../viewmodels/theme';
 import { Button, Card, Copy } from './ui';
 import { CatalogExerciseFacts, catalogExerciseFacts } from './catalog-exercise-facts';
@@ -20,15 +22,20 @@ export function ExerciseCatalogScreen() {
         data={state.status === 'ready' ? state.exercises : []}
         keyExtractor={(item) => item.exercise.catalogId}
         renderItem={({ item }) => (
-          <Pressable accessibilityRole="button" accessibilityLabel={`View ${item.exercise.name}. ${catalogExerciseFacts(item).join('. ')}`} onPress={() => {
-            selectExercise(item);
-            router.push({ pathname: '/templates/catalog-exercise', params: { catalogId: item.exercise.catalogId, ...(draftId ? { draftId } : {}) } });
-          }}>
-            <CatalogExerciseCard item={item} />
+          <Pressable accessibilityRole="button" accessibilityLabel={`View ${item.exercise.name}. ${catalogExerciseFacts(item).join('. ')}`}
+            style={({ pressed }) => [styles.item, { borderColor: colors.border, backgroundColor: pressed ? colors.surfaceStrong : undefined }]}
+            onPress={() => {
+              selectExercise(item);
+              router.push({ pathname: '/templates/catalog-exercise', params: { catalogId: item.exercise.catalogId, ...(draftId ? { draftId } : {}) } });
+            }}>
+            <View style={styles.itemContent}>
+              <Copy kind="heading">{item.exercise.name}</Copy>
+              <CatalogExerciseFacts item={item} />
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={colors.secondary} accessible={false} />
           </Pressable>
         )}
         contentContainerStyle={styles.list}
-        ItemSeparatorComponent={ExerciseSeparator}
         ListEmptyComponent={state.status === 'ready' ? (
           <Card>
             <Copy>No matching exercises</Copy>
@@ -59,14 +66,14 @@ export function ExerciseCatalogScreen() {
                 value={query}
                 onChangeText={setQuery}
                 autoCorrect={false}
-                style={[styles.search, { color: colors.text, backgroundColor: colors.surface, borderColor: colors.border }]}
+                style={[styles.search, { color: colors.text, backgroundColor: colors.background, borderColor: colors.secondary }]}
               />
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel={`Muscle group: ${selectedGroup ?? 'All muscles'}`}
                 accessibilityState={{ expanded: filterOpen }}
                 onPress={() => setFilterOpen((open) => !open)}
-                style={[styles.search, { borderColor: colors.border, backgroundColor: colors.surface }]}
+                style={[styles.search, { borderColor: colors.secondary, backgroundColor: colors.surface }]}
               >
                 <Copy>Muscle group: {selectedGroup ?? 'All muscles'} {filterOpen ? '▴' : '▾'}</Copy>
               </Pressable>
@@ -81,10 +88,10 @@ export function ExerciseCatalogScreen() {
                       onPress={() => { setSelectedGroup(group); setFilterOpen(false); }}
                       style={[styles.group, {
                         borderColor: colors.border,
-                        backgroundColor: selectedGroup === group ? colors.selected : colors.surface,
+                        backgroundColor: selectedGroup === group ? colors.surfaceStrong : colors.surface,
                       }]}
                     >
-                      <Text style={{ color: selectedGroup === group ? colors.onSelected : colors.text, fontSize: 16 }}>
+                      <Text style={{ color: colors.text, fontSize: 16 }}>
                         {group ?? 'All muscles'}
                       </Text>
                     </Pressable>
@@ -100,25 +107,13 @@ export function ExerciseCatalogScreen() {
   );
 }
 
-function CatalogExerciseCard({ item }: { item: CatalogExerciseSummary }) {
-  return (
-    <Card>
-      <Copy kind="heading">{item.exercise.name}</Copy>
-      <CatalogExerciseFacts item={item} />
-    </Card>
-  );
-}
-
-function ExerciseSeparator() {
-  return <View style={styles.separator} />;
-}
-
 const styles = StyleSheet.create({
-  list: { padding: 24, paddingBottom: 32, maxWidth: 700, width: '100%', alignSelf: 'center' },
-  header: { gap: 20, paddingBottom: 20 },
+  list: { paddingHorizontal: screenGutter, paddingTop: 24, paddingBottom: 32, maxWidth: 700, width: '100%', alignSelf: 'center' },
+  header: { gap: 12, paddingBottom: 16 },
   credit: { minHeight: 48, justifyContent: 'center', alignSelf: 'flex-start' },
-  separator: { height: 20 },
-  search: { borderWidth: 1, borderRadius: 10, padding: 12, minHeight: 48, fontSize: 16 },
+  item: { padding: 12, borderBottomWidth: StyleSheet.hairlineWidth, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  itemContent: { flex: 1, gap: 4 },
+  search: { borderWidth: 1, borderRadius: controlRadius, padding: 12, minHeight: 48, fontSize: 16 },
   groups: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  group: { borderWidth: 1, borderRadius: 10, padding: 12, minHeight: 48, justifyContent: 'center' },
+  group: { borderWidth: 1, borderRadius: controlRadius, padding: 12, minHeight: 48, justifyContent: 'center' },
 });

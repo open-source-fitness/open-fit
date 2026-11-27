@@ -1,11 +1,11 @@
 import { Stack, useLocalSearchParams, usePreventRemove, useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useDisplayName } from '../viewmodels/display-name';
 import { useTemplatesViewModel } from '../viewmodels/workouts';
 import { useTemplateEditorViewModel } from '../viewmodels/template-editor';
 import { TemplateForm } from './template-form';
-import { Button, Card, Copy, LinkCard, Resource, Screen } from './ui';
+import { Button, Card, Copy, FormError, LinkCard, Resource, RuledList, Screen } from './ui';
 
 export function TemplatesScreen() {
   const router = useRouter();
@@ -13,23 +13,23 @@ export function TemplatesScreen() {
   const { displayName } = useDisplayName();
   return (
     <Screen>
-      <Copy kind="title">Hi, {displayName}!</Copy>
-      <Copy kind="heading">Templates</Copy>
-      <Button label="Create template" onPress={() => router.push('/templates/new')} />
-      <Button label="Exercise catalog" onPress={() => router.push('/templates/catalog')} />
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+        <Copy kind="title">Templates</Copy>
+        <Button label="Create template" icon="add-outline" variant="primary" onPress={() => router.push('/templates/new')} />
+      </View>
+      <Copy kind="muted">Hi, {displayName}!</Copy>
       <Resource {...model}>
         {(templates) =>
           templates.length ? (
-            templates.map((template) => (
+            <RuledList>{templates.map((template) => (
               <LinkCard
                 key={template.id}
                 title={template.title}
                 subtitle={template.description}
                 detail={template.summary}
-                icon="barbell-outline"
                 onPress={() => router.push({ pathname: '/templates/[id]', params: { id: template.id } })}
               />
-            ))
+            ))}</RuledList>
           ) : (
             <Card>
               <Copy>No templates yet.</Copy>
@@ -37,6 +37,9 @@ export function TemplatesScreen() {
           )
         }
       </Resource>
+      <View style={{ alignSelf: 'flex-start' }}>
+        <Button label="Exercise catalog" onPress={() => router.push('/templates/catalog')} />
+      </View>
     </Screen>
   );
 }
@@ -55,16 +58,29 @@ export function TemplateDetailScreen() {
           {(template) =>
             template ? (
               <>
-                <Copy kind="label">WORKOUT TEMPLATE</Copy>
                 {model.draft ? (
-                  <TemplateForm model={model} />
+                  <>
+                    <Copy kind="title">Edit template</Copy>
+                    <TemplateForm model={model} />
+                  </>
                 ) : (
                   <>
                     <Copy kind="title">{template.title}</Copy>
-                    <Copy kind="muted">{template.description}</Copy>
-                    <Button label="Edit template details" disabled={model.saving} onPress={model.startEditing} />
-                    {model.error ? <Copy>{model.error}</Copy> : null}
-                    <Button label={model.saving ? 'Deleting…' : model.error ? 'Retry delete' : 'Delete template'} disabled={model.saving} onPress={() => {
+                    {template.description ? <Copy kind="muted">{template.description}</Copy> : null}
+                    <View style={{ alignSelf: 'flex-start' }}>
+                      <Button label="Edit Template" variant="primary" disabled={model.saving} onPress={model.startEditing} />
+                    </View>
+                    <Card>
+                      <Copy kind="heading">{template.exercises.length} {template.exercises.length === 1 ? 'exercise' : 'exercises'}</Copy>
+                      {template.exercises.map((exercise) => (
+                        <LinkCard key={exercise.id} title={exercise.name}
+                          onPress={() => router.push({
+                            pathname: '/templates/exercise', params: { templateId: template.id, exerciseId: exercise.id },
+                          })} />
+                      ))}
+                    </Card>
+                    <FormError message={model.error ?? ''} />
+                    <Button variant="danger" label={model.saving ? 'Deleting…' : model.error ? 'Retry delete' : 'Delete template'} disabled={model.saving} onPress={() => {
                       Alert.alert('Delete template?', `Delete “${template.title}”?`, [
                         { text: 'Cancel', style: 'cancel' },
                         { text: 'Delete', style: 'destructive', onPress: () => void model.removeTemplate() },
@@ -72,16 +88,6 @@ export function TemplateDetailScreen() {
                     }} />
                   </>
                 )}
-                {!model.draft && <>
-                  <Copy kind="heading">{template.exercises.length} {template.exercises.length === 1 ? 'exercise' : 'exercises'}</Copy>
-                  {template.exercises.map((exercise) => (
-                    <LinkCard key={exercise.id} title={exercise.name}
-                      subtitle={`${exercise.sets.length} ${exercise.sets.length === 1 ? 'set' : 'sets'}`}
-                      icon="barbell-outline" onPress={() => router.push({
-                        pathname: '/templates/exercise', params: { templateId: template.id, exerciseId: exercise.id },
-                      })} />
-                  ))}
-                </>}
               </>
             ) : (
               <Card>

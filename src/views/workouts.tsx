@@ -6,30 +6,27 @@ import type { SessionExercise } from '../models/workout';
 import { useTheme } from '../viewmodels/theme';
 import { sessionSummary, useSessionsViewModel, useSessionViewModel } from '../viewmodels/workouts';
 import { ExerciseSummary, exerciseSummaryText } from './exercise-summary';
-import { Card, Copy, LinkCard, Resource, Screen } from './ui';
+import { SetSheet, SetSheetRow } from './set-sheet';
+import { Card, Copy, LinkCard, Resource, RuledList, Screen } from './ui';
 
 export function WorkoutsScreen() {
   const router = useRouter();
   const model = useSessionsViewModel();
   return (
     <Screen>
-      <Copy kind="label">Sample workout history</Copy>
-      <Copy kind="title">Keep showing up.</Copy>
-      <Copy kind="muted">Demonstration workouts, with every set accounted for.</Copy>
-      <Copy kind="heading">Workout history</Copy>
+      <Copy kind="title">Workout history</Copy>
+      <Copy kind="muted">Sample workouts</Copy>
       <Resource {...model}>
         {(sessions) =>
           sessions.length ? (
-            sessions.map((session) => (
+            <RuledList>{sessions.map((session) => (
               <LinkCard
                 key={session.id}
                 title={session.title}
-                icon="checkmark-circle-outline"
                 subtitle={sessionSummary(session.startedAt, session.endedAt)}
-                detail={`${session.exercises.length} exercises · Completed`}
                 onPress={() => router.push({ pathname: '/workouts/[id]', params: { id: session.id } })}
               />
-            ))
+            ))}</RuledList>
           ) : (
             <Card>
               <Copy>No workouts yet.</Copy>
@@ -37,7 +34,6 @@ export function WorkoutsScreen() {
           )
         }
       </Resource>
-      <Copy kind="muted">Sample history · Workout logging is coming in a later update.</Copy>
     </Screen>
   );
 }
@@ -51,13 +47,12 @@ export function WorkoutDetailScreen() {
         {(session) =>
           session ? (
             <>
-              <Copy kind="label">COMPLETED WORKOUT</Copy>
               <Copy kind="title">{session.title}</Copy>
               <Copy kind="muted">{sessionSummary(session.startedAt, session.endedAt)}</Copy>
+              <Copy kind="muted">Sample workout. Sets show reps × weight in pounds.</Copy>
               {session.exercises.map((exercise) => (
                 <SessionExerciseCard key={exercise.id} exercise={exercise} />
               ))}
-              <Copy kind="muted">Sample workout · Recorded values are separate from template targets.</Copy>
             </>
           ) : (
             <Card>
@@ -95,19 +90,17 @@ function SessionExerciseCard({ exercise }: { exercise: SessionExercise }) {
           accessible={false}
         />
       </Pressable>
-      {expanded
-        ? exercise.sets.map((set) => (
-            <Card key={set.setNumber}>
-              <Copy kind="label">SET {set.setNumber}</Copy>
-              <Copy>
-                Recorded · {set.actualReps} reps × {set.actualWeight} lb
-              </Copy>
-              <Copy kind="muted">
-                Target · {set.targetReps} reps × {set.targetWeight} lb
-              </Copy>
-            </Card>
-          ))
-        : null}
+      {expanded && exercise.sets.length > 0 ? (
+        <SetSheet columns={['Target', 'Recorded']}>
+          {exercise.sets.map((set) => <SetSheetRow key={set.setNumber} number={set.setNumber}
+            accessibilityLabel={`Set ${set.setNumber}. Target: ${set.targetReps} reps × ${set.targetWeight} lb. Recorded: ${set.actualReps} reps × ${set.actualWeight} lb.`}
+            values={[
+              <Copy kind="value">{set.targetReps} × {set.targetWeight}</Copy>,
+              <Copy kind="value">{set.actualReps} × {set.actualWeight}</Copy>,
+            ]}
+          />)}
+        </SetSheet>
+      ) : null}
     </Card>
   );
 }

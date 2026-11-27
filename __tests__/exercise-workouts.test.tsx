@@ -69,19 +69,19 @@ test.each(['/templates/plan', '/workouts/log'])('saved exercises remain readable
   expect(screen.queryByText('Renamed upstream')).toBeNull();
   expect(screen.queryByText(/99 reps/)).toBeNull();
   if (initialUrl.startsWith('/templates')) {
-    const placements = screen.getAllByRole('button', { name: 'Bench press. 1 set' });
+    const placements = screen.getAllByRole('button', { name: 'Bench press' });
     await fireEvent.press(placements[0]);
     expect(await screen.findByLabelText('Set 1: 8 reps × 95 lb')).toBeVisible();
     expect(screen.getByRole('image', { name: 'Bench press — Start image' })).toHaveProp('source', [{ uri: 'https://example.org/start.webp' }]);
     expect(screen.getByText(/Chest/)).toBeVisible();
     await testRouter.back();
-    await fireEvent.press(screen.getAllByRole('button', { name: 'Bench press. 1 set' })[1]);
+    await fireEvent.press(screen.getAllByRole('button', { name: 'Bench press' })[1]);
     expect(await screen.findByLabelText('Set 1: 12 reps × 95 lb')).toBeVisible();
   } else {
     for (const placement of screen.getAllByRole('button', { name: /^Bench press,/ })) {
       await fireEvent.press(placement);
     }
-    expect(screen.getByText('Target · 8 reps × 95 lb')).toBeVisible();
-    expect(screen.getByText('Target · 12 reps × 95 lb')).toBeVisible();
+    expect(screen.getByLabelText(/Set 1. Target: 8 reps × 95 lb./)).toBeVisible();
+    expect(screen.getByLabelText(/Set 1. Target: 12 reps × 95 lb./)).toBeVisible();
   }
 });

@@ -1,13 +1,16 @@
 import { Stack } from 'expo-router';
 import { useTheme } from '../viewmodels/theme';
+import { chrome } from '../theme/palette';
 
 export function SectionStack({ screens }: { screens: Readonly<Record<string, string>> }) {
-  const { colors } = useTheme();
+  const { colors, displayFont } = useTheme();
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: colors.background },
-        headerTintColor: colors.text,
+        headerBackButtonDisplayMode: 'minimal',
+        headerStyle: { backgroundColor: chrome.background },
+        headerTintColor: chrome.text,
+        headerTitleStyle: displayFont ? { fontFamily: displayFont, fontSize: 24 } : undefined,
         headerShadowVisible: false,
         contentStyle: { backgroundColor: colors.background },
       }}

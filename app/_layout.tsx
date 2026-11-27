@@ -17,6 +17,7 @@ import { DisplayNameProvider, useDisplayName } from '../src/viewmodels/display-n
 import { ExerciseCatalogProvider } from '../src/viewmodels/exercise-catalog';
 import { ThemeProvider, useTheme } from '../src/viewmodels/theme';
 import { WorkoutProvider } from '../src/viewmodels/workout-provider';
+import { chrome } from '../src/theme/palette';
 import { Button, FormError } from '../src/views/ui';
 
 export default function RootLayout({
@@ -48,7 +49,7 @@ export default function RootLayout({
 }
 
 function Navigation() {
-  const { scheme, colors, ready } = useTheme();
+  const { scheme, colors, ready, displayFont } = useTheme();
   const { displayName, status, retry } = useDisplayName();
   const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
   return (
@@ -66,9 +67,15 @@ function Navigation() {
         },
       }}
     >
-      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style={(ready && status === 'ready') || scheme === 'dark' ? 'light' : 'dark'} />
       {ready && status === 'ready' ? (
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack screenOptions={{
+          headerShown: false,
+          headerStyle: { backgroundColor: chrome.background },
+          headerTintColor: chrome.text,
+          headerShadowVisible: false,
+          headerTitleStyle: displayFont ? { fontFamily: displayFont, fontSize: 24 } : undefined,
+        }}>
           <Stack.Screen name="index" />
           <Stack.Protected guard={displayName === null}>
             <Stack.Screen name="onboarding" options={{ headerShown: true, title: 'Welcome' }} />

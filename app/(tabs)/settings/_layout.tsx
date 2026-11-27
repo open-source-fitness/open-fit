@@ -1,5 +1,5 @@
 import { SectionStack } from '../../../src/views/section-stack';
 
 export default function Layout() {
-  return <SectionStack screens={{ index: 'Settings' }} />;
+  return <SectionStack screens={{ index: 'OpenFit' }} />;
 }

@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect, useRef, useState, type PropsWithChildren } from 'react';
 import { useColorScheme } from 'react-native';
+import { useFonts } from 'expo-font';
 import type { ThemePreference, ThemePreferenceStore } from '../services/theme-preference-store';
 import { themes } from '../theme/palette';
 
 function useThemeViewModel(store: ThemePreferenceStore) {
   const system = useColorScheme();
+  const [fontsLoaded] = useFonts(displayFonts);
   const [preference, setPreference] = useState<ThemePreference>('system');
   const [ready, setReady] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -48,10 +50,17 @@ function useThemeViewModel(store: ThemePreferenceStore) {
   }
 
   const scheme = preference === 'system' ? (system ?? 'light') : preference;
-  return { preference, scheme, colors: themes[scheme], ready, saving, error, selectPreference };
+  return {
+    preference, scheme, colors: themes[scheme], ready, saving, error, selectPreference,
+    displayFont: fontsLoaded ? 'SairaCondensed' : undefined,
+  };
 }
 
 const ThemeContext = createContext<ReturnType<typeof useThemeViewModel> | null>(null);
+
+const displayFonts = {
+  SairaCondensed: require('../../assets/fonts/SairaCondensed-ExtraBold.ttf'),
+};
 
 export function ThemeProvider({ store, children }: PropsWithChildren<{ store: ThemePreferenceStore }>) {
   const value = useThemeViewModel(store);
