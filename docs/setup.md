@@ -50,13 +50,8 @@ EXPO_OFFLINE=1 EXPO_NO_DOTENV=1 npx expo export --platform ios --platform androi
 
 These commands check types, Jest behavior, Expo dependencies, and native JavaScript bundles.
 
-There is a chance that some of the Expo dependencies are outdated. If so, simply run the suggested command: 
-
-```sh
-npx expo install --check
-```
-
-When the dependency check passes it should say something like this: `20/20 checks passed. No issues detected!`
+Run `npx expo install --check` to check installed package versions against the
+project's Expo SDK. Expo Doctor reports how many of its project diagnostics pass.
 
 ## Local template storage development
 
@@ -73,6 +68,61 @@ recover its result without reversing a newer edit. Deletion removes the template
 and its receipts in one transaction. It retains the template ID so delayed saves
 cannot restore it.
 
+## Device review
+
+Use a supported physical device for the offline acceptance audit. Start from a
+fresh checkout and run `npm ci` while the build computer is online. Set up Android
+Studio and its SDK for Android, or Xcode and CocoaPods for iOS. A physical iPhone
+requires an Apple signing identity and a provisioning profile for the device.
+An emulator or simulator can be used for a rehearsal.
+
+In your disposable checkout, set `expo.android.package` or
+`expo.ios.bundleIdentifier` in `app.json` to an unused test identifier before
+generating the native project. Keep this identifier out of commits. Before
+running the command, connect the test device over USB, enable airplane mode,
+and turn Wi-Fi off. The command can launch the app immediately after installing
+it. Keep Metro stopped throughout.
+
+```sh
+# Android
+npx expo run:android --variant release --device --no-bundler
+
+# iOS
+npx expo run:ios --configuration Release --device --no-bundler
+```
+
+Select the test device when prompted. The native project is generated locally.
+See [Expo's local build guide](https://docs.expo.dev/guides/local-app-development/).
+
+1. On first launch, confirm the storage and backup notice,
+   enter a display name, and check the greeting and empty template list.
+2. Search and filter the bundled RepDB catalog. Confirm it credits RepDB, then
+   read the instructions and view a single illustration and both poses of a
+   paired exercise. Add exercises to a template and save a name, description,
+   and fixed weight and rep targets.
+3. Force-close the app through the OS and reopen it while offline. Confirm the
+   display name and template targets survived. Check that Cancel discards an
+   edit, then save different targets and reorder the exercises. Reopen and
+   verify the saved edit. Delete the template, then force-close and reopen to
+   confirm it stays deleted.
+4. Create another template, edit the display name in Settings, and select a
+   different appearance. Install a newer release build over it without
+   uninstalling or clearing storage. Use the same application identifier and
+   signing identity, then verify the name, template, saved exercise details,
+   and appearance offline.
+5. Check keyboard access, increased text size, Light/Dark/System appearance, and
+   the sample labels on workout history and detail.
+
+Record the commit(s), device and OS version, install and network conditions,
+and the result of each step. Record the packaged release size and compare it
+with a release build of pre-catalog commit `63065abb17793d2b217d3b5d3161d1ae143da0ce` using the same platform,
+build configuration, and size measurement. The
+[#138 catalog record](../agent-docs/issue-138-offline-catalog.md#bundle-evidence) gives the
+exported bundle comparison. The
+[#141 verification record](../agent-docs/issue-141-local-onboarding.md) gives
+the existing automated SQLite evidence, including save failures and retries.
+
+Unsaved drafts are temporary. Backup and recovery are planned after the MVP.
 
 ## Frontend structure
 

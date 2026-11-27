@@ -4,7 +4,7 @@ These are acknowledged bugs, unfinished pieces, or deliberate exclusions in the 
 
 If you find something that isn't here, please [file an issue](https://github.com/open-source-fitness/open-fit/issues/new?template=bug_report.md)!
 
-*Last Updated: Nov 25, 2026*
+*Last Updated: Nov 26, 2026*
 
 ## Bugs
 
@@ -12,7 +12,10 @@ No known bugs yet. We know they are out there, so please [report them](https://g
 
 ## Unfinished pieces
 
-Device testing is currently only being done using Expo Go development builds. Until developer profiles can be acquired for build signing, true on-device offline testing cannot be done
+The [offline device review](./setup.md#device-review) uses a locally built release
+app. Android contributors can run it with Android Studio and the Android SDK.
+Testing on a physical iPhone requires an Apple signing identity and a
+provisioning profile that covers the test device.
 
 ## Deliberate exclusions
 
