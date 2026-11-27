@@ -8,6 +8,7 @@
 - **Issues:** Before selecting work or changing issues, milestones, or board status, read [project management](docs/project-mgmt.md). Use the matching [issue template](.github/ISSUE_TEMPLATE) when creating an issue.
 - **Communication:** Before requesting assignment, requesting review, or discussing project-wide decisions, read [communication standards](docs/communication-standards.md).
 - **Pull requests:** When preparing a PR, use [the PR template](.github/pull_request_template.md).
+- **Branch creation and hygiene:** When creating worktrees and branches for implementation, follow the Branch Hygiene standards in the [git standards](./docs/git-standards.md)
 
 ## General coding principles
 

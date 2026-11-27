@@ -7,7 +7,7 @@ the MVP has no committed release dates.
 
 ## MVP
 
-The semester MVP lets a user create and reuse workout templates using exercises
+The MVP lets a user create and reuse workout templates using exercises
 from a catalog, start workout sessions using existing templates, and review saved
 workout history. It also supports recording exercise maximums and calculating
 target weights as percentages of those maximums. These functions are available
@@ -15,22 +15,18 @@ without a subscription or payment.
 
 The MVP is scoped to two delivery milestones:
 
-| Milestone | Target date | What a user can do |
-| --- | --- | --- |
-| [M1: Runnable Demo](https://github.com/open-source-fitness/open-fit/milestone/1) | November 18, 2026 | Sign in, choose catalog exercises, and create, save, reopen, edit, and delete a workout template with fixed target weights and repetitions. Workout logging and maximum-based calculations are deferred to M2. |
-| [M2: MVP](https://github.com/open-source-fitness/open-fit/milestone/2) | December 2, 2026 | Start a workout from a saved template, record actual weights and repetitions, complete or stop the workout, and review its saved history. Record personal exercise maximums and use percentages to calculate template target weights. |
+| Milestone                                                                        | Target date       | What a user can do                                                                                                                                                                                                                    |
+| -------------------------------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [M1: Runnable Demo](https://github.com/open-source-fitness/open-fit/milestone/1) | November 18, 2026 | Sign in, choose catalog exercises, and create, save, reopen, edit, and delete a workout template with fixed target weights and repetitions. Workout logging and maximum-based calculations are deferred to M2.                        |
+| [M2: MVP](https://github.com/open-source-fitness/open-fit/milestone/2)           | December 2, 2026  | Start a workout from a saved template, record actual weights and repetitions, complete or stop the workout, and review its saved history. Record personal exercise maximums and use percentages to calculate template target weights. |
 
 Templates and workout history must persist across app restarts. Editing or reusing
 a template must not alter previously logged workouts. The first milestone covers
 the complete template-creation workflow; the second adds the workout-logging
 workflow and percentage-based planning.
 
-The features below are deferred from the MVP to keep the semester build focused
-on these core workflows within the available development time. Contributors can
-help with implementation, testing, and documentation; see the
-[contribution guide](../CONTRIBUTING.md) and
-[project board](https://github.com/orgs/open-source-fitness/projects/1) for how to get involved
-and what work is currently planned.
+The features below are deferred from the MVP to keep the first build focused
+on these core workflows within the available development time.
 
 ## Next
 

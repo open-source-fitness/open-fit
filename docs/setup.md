@@ -6,16 +6,11 @@
 - Expo Go supporting SDK 58 on an iPhone or Android device.
 - A computer and phone on the same Wi-Fi network when using Expo Go over LAN.
 
-`package.json` selects Expo SDK 58; `package-lock.json` pins installed versions.
-The version in `app.json` is the app release, not the SDK. Use committed versions.
-OpenFit keeps the existing Expo slug and appearance storage key so Expo Go users
-retain their theme across the rename. The existing URL scheme keeps app links
-working across the rename.
 For SDK upgrades, follow [Expo's guide](https://docs.expo.dev/workflow/upgrading-expo-sdk-walkthrough/),
 then run `npx expo install --fix` and `npx expo-doctor`.
 
 The app uses on-device SQLite and a bundled RepDB exercise catalog. First launch
-requires a display name. App development requires no backend credentials or
+will ask for a display name. App development requires no backend credentials or
 environment file.
 
 ## Install and launch
@@ -27,7 +22,7 @@ npm ci
 npm start
 ```
 
-`npm start` runs `expo start --go` on port 8081 by default; keep the terminal running.
+`npm start` runs `expo start --go` on port 8081 by default; keep this terminal running.
 `npm ci` also generates Metro's illustration index from the pinned RepDB
 package. Run `npm run postinstall` to regenerate it after an install with
 lifecycle scripts disabled.
@@ -53,18 +48,18 @@ npx expo-doctor
 EXPO_OFFLINE=1 EXPO_NO_DOTENV=1 npx expo export --platform ios --platform android --output-dir dist
 ```
 
-These check types, Jest behavior, Expo dependencies, and native JavaScript bundles.
-Jest needs no backend or credentials. The export checks the production JavaScript
-bundles and bundled assets with Expo offline and dotenv loading disabled. Use an
-installed release build to verify the native SQLite bridge and image rendering.
+These commands check types, Jest behavior, Expo dependencies, and native JavaScript bundles.
+
+Run `npx expo install --check` to check installed package versions against the
+project's Expo SDK. Expo Doctor reports how many of its project diagnostics pass.
 
 ## Local template storage development
 
 Run `npm test -- --runTestsByPath __tests__/sqlite-template-creation.test.tsx`
-to drive the existing routes against disposable database files. Node's SQLite
-engine runs the app's SQL through a substitute for the Expo native bridge. The
-suite covers onboarding, renaming, migration of an existing local database,
-template CRUD, reorder, Cancel, reopen, rollback, and retry after a commit.
+to test the existing routes against disposable database files. Node's SQLite
+engine runs the app's SQL through a stub for the Expo native bridge. The
+test suite covers onboarding, renaming, migration of an existing local database,
+template CRUD, reorder, cancel, reopen, rollback, and retry after a commit.
 
 The display name and workout templates share one versioned database. Each
 template is stored as one row with its exercise snapshots and ordered sets.
@@ -78,7 +73,8 @@ cannot restore it.
 Use a supported physical device for the offline acceptance audit. Start from a
 fresh checkout and run `npm ci` while the build computer is online. Set up Android
 Studio and its SDK for Android, or Xcode and CocoaPods for iOS. A physical iPhone
-requires local code signing. An emulator or simulator can be used for a rehearsal.
+requires an Apple signing identity and a provisioning profile for the device.
+An emulator or simulator can be used for a rehearsal.
 
 In your disposable checkout, set `expo.android.package` or
 `expo.ios.bundleIdentifier` in `app.json` to an unused test identifier before

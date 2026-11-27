@@ -1,24 +1,24 @@
 # OpenFit - Design Document
 
-|                  |                                                                                                                                                           |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Authors**      | James Teuscher                                                                                                                                            |
-| **Reviewers**    | [who reviewed it — a teammate, the instructor, a design-review partner]                                                                                   |
-| **Status**       | In review                                                                                                                                                 |
-| **Last updated** | 11-20-26                                                                                                                                                  |
+|                  |                                                                                                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Authors**      | James Teuscher                                                                                                                                                            |
+| **Reviewers**    | [who reviewed it — a teammate, the instructor, a design-review partner]                                                                                                   |
+| **Status**       | In review                                                                                                                                                                 |
+| **Last updated** | 11-20-26                                                                                                                                                                  |
 | **Links**        | [proposal](../cp3/cp3-proposal) · [repository](https://github.com/open-source-fitness/open-fit) · [issue tracker](https://github.com/open-source-fitness/open-fit/issues) |
 
 ## Revision history
 
-| Date     | Author         | What changed                   |
-| -------- | -------------- | ------------------------------ |
-| 10-16-26 | James Teuscher | First draft                    |
-| 10-20-26 | James Teuscher | First full draft               |
-| 10-21-26 | James Teuscher | Finished first copy            |
-| 11-4-26  | James Teuscher | Revised to respond to feedback |
-| 11-9-26  | Codex | Record frontend decisions and clarify shared terminology |
-| 11-17-26 | Codex | Record the confirmed M1 database scope and account-name ownership |
-| 11-20-26 | Codex | Document local onboarding, SQLite, and offline verification |
+| Date     | Author         | What changed                                                      |
+| -------- | -------------- | ----------------------------------------------------------------- |
+| 10-16-26 | James Teuscher | First draft                                                       |
+| 10-20-26 | James Teuscher | First full draft                                                  |
+| 10-21-26 | James Teuscher | Finished first copy                                               |
+| 11-4-26  | James Teuscher | Revised to respond to feedback                                    |
+| 11-9-26  | Codex          | Record frontend decisions and clarify shared terminology          |
+| 11-17-26 | Codex          | Record the confirmed M1 database scope and account-name ownership |
+| 11-20-26 | Codex          | Document local onboarding, SQLite, and offline verification       |
 
 ---
 

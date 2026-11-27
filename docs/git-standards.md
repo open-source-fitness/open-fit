@@ -32,9 +32,9 @@ expect that instead.
 
 ## Pull requests
 
-**The rule**: Changes that resolve one issue, or 1,000 lines, whichever comes first. If an issue's resolution requires more than 1,000 lines of code, it should be decomposed.
+**The rule**: Changes that resolve one issue, or 1,000 lines, whichever comes first. If an issue's resolution requires more than 1,000 lines of code, it should be converted into a [stacked PR](https://docs.github.com/en/pull-requests/how-tos/stacked-pull-requests).
 
-**The reason**: PRs should be easily human reviewable, so they should be kept small and manageable in size.
+**The reason**: PRs should be easily human reviewable, even if agents are reviewing them, so they should be kept small and manageable in size.
 
 ## Review
 
@@ -47,6 +47,12 @@ expect that instead.
 **The rule**: Only maintainers have permission to merge. The merging method that will be used is squash and merge.
 
 **The reason**: Protecting the `main` branch by limiting merge permissions will keep the production code safe. Squash and merge will keep the history clean and linear, and allow entire features to be rolled back with one command if necessary.
+
+## Branch Hygiene
+
+ **The rule**: Once a maintainer merges a PR and completes a production audit, the merged branch should be deleted on the remote and local copies of the repo.
+
+ **The reason**: Leaving lots of merged branches in the repo causes clutter and makes it difficult to sort through active branches. Keeping the branches limited to those in active development will create a better contributing environment.
 
 ## Definition of done
 
